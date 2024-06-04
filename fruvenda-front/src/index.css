@@ -1,0 +1,98 @@
+@layer tailwind-base, primereact, tailwind-utilities;
+
+@import 'primereact/resources/themes/lara-light-green/theme.css';
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+@layer base{
+  @font-face {
+    font-family: outfit;
+    src: url('./assets/fonts/Outfit-Medium.ttf');
+  }
+  
+  @font-face {
+    font-family: outfit-semibold;
+    src: url('./assets/fonts/Outfit-SemiBold.ttf');
+  }
+  @font-face {
+    font-family: outfit-bold;
+    src: url('./assets/fonts/Outfit-Bold.ttf');
+  }
+
+}
+
+
+@layer utilities{
+  .text-aureus-4xl {
+    font-size: 185.668px;
+  }
+  
+  .text-aureus-3xl {
+    font-size: 114.694px;
+  }
+  
+  .text-aureus-2xl {
+    font-size: 70.973px;
+  }
+  
+  .text-aureus-xl {
+    font-size: 43.722px;
+  }
+  
+  .text-aureus-l {
+    font-size: 27.251px;
+  }
+  
+  .text-aureus-m {
+    font-size: 16.915px;
+  }
+  
+  .text-aureus-s {
+    font-size: 10.486px;
+  }
+
+  .bottom-5pt{
+    bottom: 5%;
+  }
+  .ml-25{
+    margin-left: 6.2rem;
+  }
+  .wrapper-w{
+    width : calc(100% - 3.5rem)
+  }
+
+  .w-96-1{
+    width: 24.2rem;
+  }
+}
+
+
+html{
+  font-family: outfit !important;
+  letter-spacing: 0.5px;
+  font-size: 16.915px;
+}
+body {
+  font-family: outfit !important;
+  letter-spacing: 0.5px;
+  font-size: 16.915px;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body, #root, main {
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
