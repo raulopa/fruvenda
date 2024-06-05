@@ -80,6 +80,31 @@ class ProductController extends Controller
         }
     }
 
+    public function getProducto($id){
+        try {
+            $product = Product::getProduct($id);
+
+            if (!$product) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'El producto no existe'
+                ]);
+            }
+            $product->images = $this->getProductImages($product->id_comercio, $product->id);
+
+            return response()->json([
+                'status' => true,
+                'product' => $product,
+                'comercio' => CommerceController::getNombreProfile($product->id_comercio)
+            ]);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Se ha producido un error al obtener los productos: ' . $error->getMessage()
+            ], 500);
+        }
+    }
+
     public function getProductosComercioCliente($id)
     {
         try {

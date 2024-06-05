@@ -138,28 +138,28 @@ export default function OrderListPanel() {
     const estadoTemplate = (order) => (
         <div>
             <Button onClick={(e) => overlayRefs.current[order.id].toggle(e)}>
-                <Tag className={`${order.estado == 'cancelado' ? 'bg-black' : ''}`} severity={getSeverity(order.estado)} value={order.estado}></Tag>
+                <Tag className={`${order.estado == 'cancelado' ? 'bg-black' : ''} capitalize`} severity={getSeverity(order.estado)} value={order.estado}></Tag>
             </Button>
             <OverlayPanel ref={(el) => (overlayRefs.current[order.id] = el)} closeOnEscape>
                 <div className="flex flex-col w-full h-full items-center justify-center">
                     <Button onClick={() => handleStatus('confirmado', order)} className="w-full mt-2">
                         <div className="w-full flex justify-center">
-                            <Tag className="w-full" severity={getSeverity('confirmado')} value={'confirmado'}></Tag>
+                            <Tag className="w-full capitalize" severity={getSeverity('confirmado')} value={'confirmado'}></Tag>
                         </div>
                     </Button>
                     <Button onClick={() => handleStatus('preparacion', order)} className="w-full mt-2">
                         <div className="w-full flex justify-center">
-                            <Tag className="w-full" severity={getSeverity('preparacion')} value={'preparacion'}></Tag>
+                            <Tag className="w-full capitalize" severity={getSeverity('preparacion')} value={'preparacion'}></Tag>
                         </div>
                     </Button>
                     <Button onClick={() => handleStatus('entregado', order)} className="w-full mt-2">
                         <div className="w-full flex justify-center">
-                            <Tag className="w-full px-6" severity={getSeverity('entregado')} value={'entregado'}></Tag>
+                            <Tag className="w-full px-6 capitalize" severity={getSeverity('entregado')} value={'entregado'}></Tag>
                         </div>
                     </Button>
                     <Button onClick={() => handleStatus('cancelado', order)} className="w-full mt-2">
                         <div className="w-full flex justify-center">
-                            <Tag className="w-full px-6 bg-black" severity={getSeverity('cancelado')} value={'cancelado'}></Tag>
+                            <Tag className="w-full px-6 capitalize bg-black" severity={getSeverity('cancelado')} value={'cancelado'}></Tag>
                         </div>
                     </Button>
                 </div>

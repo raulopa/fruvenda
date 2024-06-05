@@ -23,7 +23,7 @@ export default function useProductService() {
 
     async function getCommerceProductsForCustomers(id) {
         try {
-            let response = await axios.get(`${apiUrl}productos/${id}`);
+            let response = await axios.get(`${apiUrl}productos/comercio/${id}`);
 
             if (response.status == 200) {
                 return { 'status': true, products:response.data.products}
@@ -33,6 +33,20 @@ export default function useProductService() {
             return { 'status': false, message: JSON.parse(error.request.responseText).message }
         }
     }
+
+    async function getProduct(id) {
+        try {
+            let response = await axios.get(`${apiUrl}productos/${id}`);
+
+            if (response.status == 200) {
+                return { 'status': true, product:response.data.product, commerce: response.data.comercio}
+            }
+
+        } catch (error) {
+            return { 'status': false, message: JSON.parse(error.request.responseText).message }
+        }
+    }
+    
 
     async function deleteProduct(id) {
         try {
@@ -141,6 +155,7 @@ export default function useProductService() {
         deleteProduct,
         saveProduct,
         editProduct,
+        getProduct,
         getCommerceProductsForCustomers
     };
 }

@@ -39,6 +39,7 @@ class Post extends Model
         return DB::table('posts')
             ->whereIn('id_comercio', $seguidoIds)
             ->orderBy('fecha', 'desc')
+            ->where('visible' , 1)
             ->get();
     }
 

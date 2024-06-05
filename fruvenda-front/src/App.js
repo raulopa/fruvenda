@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { Landing, Login, Signup, Dashboard, SignupCommerce, ProductManagement, Logout, Profile, Cart, AvailableMarkets } from './pages';
+import { Landing, Login, Signup, Dashboard, SignupCommerce, ProductManagement, Logout, Profile, Cart, AvailableMarkets, ProductDetail } from './pages';
 import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
 
 
@@ -29,6 +29,7 @@ function App() {
             <Route path='/profile/:slug' element={<Profile />}></Route>
             <Route path='/cart' element={<Cart />}></Route>
             <Route path='/markets' element={<AvailableMarkets />}></Route>
+            <Route path="/product/:product" element={<ProductDetail />}></Route>
           </Routes>
         </main>
       </BrowserRouter>

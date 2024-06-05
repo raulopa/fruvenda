@@ -4,8 +4,10 @@ import { Image } from "primereact/image";
 import { InputNumber } from "primereact/inputnumber";
 import { useState } from "react";
 import useCartService from "services/cart-service/UseCartService";
+import { useNavigate } from "react-router-dom";
 
 export default function SellProductCard({ product }) {
+    let navigation = useNavigate();
     const [cantidad, setCantidad] = useState(0);
     const { addProductToCart,updateCartLength } = useCartService();
 
@@ -44,6 +46,10 @@ export default function SellProductCard({ product }) {
         }
     };
 
+    const handleProductDetail = () => {
+        navigation(`/product/${product.id}`)
+    }
+
     return (
         <Card header={header} title={title(product.nombre)} subTitle={subtitle(product.descripcion)} className="h-94 w-80 border border-slate-200 rounded-xl p-4 relative">
             <div className="w-12/12 p-2 flex items-center justify-between absolute left-0 right-0 bottom-0">
@@ -73,7 +79,7 @@ export default function SellProductCard({ product }) {
                     </div>
                 )}
 
-                <Button icon="pi pi-eye" className={`bg-green-500 hover:bg-green-600 px-2 h-12 rounded-lg text-white mt-2 ${sessionStorage.getItem('entityType') !== '1' ? 'w-2/12' : 'w-full'}`} />
+                <Button onClick={handleProductDetail} icon="pi pi-eye" className={`bg-green-500 hover:bg-green-600 px-2 h-12 rounded-lg text-white mt-2 ${sessionStorage.getItem('entityType') !== '1' ? 'w-2/12' : 'w-full'}`} />
             </div>
         </Card>
     );

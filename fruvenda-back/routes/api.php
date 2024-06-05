@@ -39,7 +39,8 @@ Route::group(['prefix' => 'productos', 'middleware' => ['auth:sanctum']], functi
 });
 
 Route::group(['prefix' => 'productos'], function (){
-    Route::get('/{id}',  [Controllers\ProductController::class, 'getProductosComercioCliente']);
+    Route::get('/comercio/{id}',  [Controllers\ProductController::class, 'getProductosComercioCliente']);
+    Route::get('/{id}', [Controllers\ProductController::class, 'getProducto']);
 });
 
 /* COMERCIO */

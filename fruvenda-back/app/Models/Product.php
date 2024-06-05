@@ -18,7 +18,7 @@ class Product extends Model
     }
 
     public static function getByCommerceIdForCustomer($id){
-        $products = DB::table('productos')->where('id_comercio', $id)->where('visible', 1)->where('borrado', 0)->get();
+        $products = DB::table('productos')->where('id_comercio', $id)->where('visible', 1)->where('stock', '>', 0)->where('borrado', 0)->get();
         return $products;
     }
 
@@ -45,5 +45,10 @@ class Product extends Model
     public static function getProducts($productsId)
     {
         return DB::table('productos')->whereIn('id', $productsId)->get();
+    }
+
+    public static function getProduct($id)
+    {
+        return DB::table('productos')->where('id', $id)->first();
     }
 }

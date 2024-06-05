@@ -107,7 +107,7 @@ export default function OrderListCustomer() {
     const estadoTemplate = (order) => (
         <div>
             <Button onClick={(e) => overlayRefs.current[order.id].toggle(e)}>
-                <Tag className={`${order.estado == 'cancelado' ? 'bg-black' : ''}`} severity={getSeverity(order.estado)} value={order.estado}></Tag>
+                <Tag className={`${order.estado == 'cancelado' ? 'bg-black' : ''} capitalize`} severity={getSeverity(order.estado)} value={order.estado}></Tag>
             </Button>
             <OverlayPanel ref={(el) => (overlayRefs.current[order.id] = el)} closeOnEscape>
                 <div className="flex flex-col w-full h-full items-center justify-center">
