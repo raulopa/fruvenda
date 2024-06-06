@@ -1,14 +1,23 @@
-import { React, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import InputForm from "components/input-form/InputForm";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuthService from "services/auth-service/UseAuthService";
+import { Toast } from "primereact/toast";
 
 export default function LoginForm() {
 
-
+    let toast = useRef(null)
     let navigation = useNavigate()
     const { loginUsuario } = useAuthService();
-   
+    let location = useLocation();
+    const message = location.state?.error || null;
+
+    useEffect(() => {
+        if (message) {
+            toast.current.show(message);
+            location.state.error = null;
+        }
+    }, [])
 
     const [formValues, setFormValues] = useState({
         email: { value: "", required: true },
@@ -27,7 +36,7 @@ export default function LoginForm() {
 
 
 
-    const handleSubmit = async  (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         let login = await loginUsuario(formValues);
@@ -43,6 +52,7 @@ export default function LoginForm() {
 
     return (
         <div className="w-full md:6/12 lg:w-5/12 p-10 mt-2 outline outline-1 outline-gray-200 dark:outline-slate-600 m-auto shadow-xl rounded-2xl flex items-center justify-center transition-all">
+            <Toast ref={toast} position="bottom-right" />
             <div className="w-full m-auto">
                 <h1 className="font-outfit-semibold  p-2 text-center text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 bg-clip-text font-bold text-4xl text-transparent">Iniciar sesión</h1>
                 <form className="text-center dark:text-white w-6/12 mx-auto" onSubmit={handleSubmit}>

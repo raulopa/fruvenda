@@ -83,7 +83,7 @@ export default function ReviewsProfilePanel({readOnly}) {
 
     return (
         <div className="flex flex-col justify-center items-center">
-            <Toast ref={toast} position="top-center" />
+            <Toast ref={toast} position="bottom-right" />
             {!readOnly && <div className="w-full flex justify-center">
                 <Dialog header={'Escribe tu reseña'} visible={visibleDialog} style={{ width: '50vw' }} onHide={() => { setVisibleDialog(false); }} >
                 <ReviewDialogContent setVisible={setVisibleDialog} setRefresh={setRefresh} toast={toast} />

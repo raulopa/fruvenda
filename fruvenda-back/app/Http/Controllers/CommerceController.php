@@ -115,6 +115,40 @@ class CommerceController extends Controller
         }
     }
 
+    public function getCommercesByMarket($id){
+        try {
+            $comercios = Commerce::getCommercesByMarket($id)->toArray();
+
+            $comerciosWithAllInfo = array_map(function($comercio) {
+                $user = User::where('email', $comercio->email)->first();
+
+                $comercio->productos = ProductController::getProductosComercioMercado($comercio->id)->toArray();
+
+                if ($user) {
+                    // Obtén la URL de la foto de perfil
+                    $comercio->foto_perfil = self::getProfileImageUrl($user->id);
+                } else {
+                    // Si el usuario no se encuentra, puedes asignar un valor predeterminado si lo deseas
+                    $comercio->foto_perfil = null;
+                }
+                return $comercio;
+            }, $comercios);
+            if ($comercios) {
+                return response()->json([
+                    'status' => false,
+                    'comercios' => $comerciosWithAllInfo
+                ], 200);
+            } else {
+                throw new NotFoundHttpException();
+            }
+        } catch (Error $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], $error->getCode() == 0 ? 400 : $error->getCode());
+        }
+    }
+
 
     public function getCommerceBySlug($slug)
     {

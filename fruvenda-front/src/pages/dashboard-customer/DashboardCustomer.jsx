@@ -37,7 +37,7 @@ export default function DashboardCustomer() {
 
     return (
         <div className="p-4 h-full flex flex-col w-full">
-            <Toast ref={toast} position="top-center" />
+            <Toast ref={toast} position="bottom-right" />
             <Dialog  header={visibleDialogFollowed ? 'Comercios a los que sigues' : 'Gestiona tus reseñas'} visible={visibleDialogReview || visibleDialogFollowed} style={{ width: '50vw', height: '70vh' }} onHide={() => { setVisibleDialogReview(false); setVisibleDialogFollowed(false); }}>
                 { visibleDialogReview && <ReviewsDashboardPanel toast={toast} /> }
                 {visibleDialogFollowed && <FollowedMarketsProfilePanel toast={toast} />}

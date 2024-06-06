@@ -1,39 +1,38 @@
 import { useState, useEffect } from "react";
 import { ProfileCommerce, ProfileCustomer, Wrapper } from "pages";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function Profile() {
     const { slug } = useParams();
     const [isCommerceProfile, setIsCommerceProfile] = useState(null);
+    let navigation = useNavigate();
 
-    useEffect(() => {  
+    useEffect(() => {
         if (localStorage.getItem('commerceToken')) {
             sessionStorage.setItem('entityType', 1);
-    
-        } else {
+
+        } else if (localStorage.getItem('token')) {
             sessionStorage.setItem('entityType', 0);
-        }    
-    if(slug == null){
-        if(sessionStorage.getItem('entityType') == '1'){
-            setIsCommerceProfile(true);
-        }else if(sessionStorage.getItem('entityType') == '0'){
-            setIsCommerceProfile(false);
         }
-    }else{
-        const hasHyphens = /-/g.test(slug);
-        setIsCommerceProfile(hasHyphens);
-    }
-    console.log(isCommerceProfile);
+        if (slug == null) {
+
+            if (!localStorage.getItem('commerceToken') && !localStorage.getItem('token')) {
+                navigation('/login');
+            }
+            if (sessionStorage.getItem('entityType') == '1') {
+                setIsCommerceProfile(true);
+            } else if (sessionStorage.getItem('entityType') == '0') {
+                setIsCommerceProfile(false);
+            }
+
+        } else {
+            const hasHyphens = /-/g.test(slug);
+            setIsCommerceProfile(hasHyphens);
+        }
     }, [slug]);
-    if (localStorage.getItem('commerceToken')) {
-        sessionStorage.setItem('entityType', 1);
 
-    } else {
-        sessionStorage.setItem('entityType', 0);
-    }
 
-    console.log(isCommerceProfile);
     return (
-        <Wrapper page={isCommerceProfile  != null ? isCommerceProfile  ? <ProfileCommerce /> : <ProfileCustomer /> : 'Cargando...'} />
+        <Wrapper page={isCommerceProfile != null ? isCommerceProfile ? <ProfileCommerce /> : <ProfileCustomer /> : 'Cargando...'} />
     );
 }

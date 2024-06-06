@@ -85,7 +85,7 @@ export default function ProfileCommerce() {
 
     return (
         <div className="p-4 h-full flex flex-col">
-            <Toast ref={toast} position="top-center" />
+            <Toast ref={toast} position="bottom-right" />
             <div className="h-64 flex items-center">
                 <div className="h-64 relative w-64">
                     {commerce != null && commerce.image != null ? (
@@ -98,7 +98,7 @@ export default function ProfileCommerce() {
                     <h1 className="font-outfit-semibold p-2 text-aureus-xl lg:text-aureus-2xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">{commerce.nombre}</h1>
                     <Rating className="ml-2 mt-3" value={commerce.rating} readOnly cancel={false} />
                 </div>
-                {sessionStorage.getItem('entityType') != 1 && <div className="h-full flex items-center mb-4">
+                {sessionStorage.getItem('entityType') == 0 && <div className="h-full flex items-center mb-4">
                     <Button label={followed ? 'Seguido' : 'Seguir'} icon={followed ? 'pi pi-check' : 'pi pi-plus'} onClick={()=>handleFollow()} className={ `px-2 py-1 rounded-full border border-emerald-500 ${followed ? 'bg-emerald-500 text-white' : 'text-emerald-500 hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:text-white'}`} />
                 </div>}
                 

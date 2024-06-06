@@ -56,4 +56,20 @@ class Commerce extends Model
     {
         return DB::table('comercios')->where('id', $id)->first();
     }
+
+    public static function getCommercesByMarket($id)
+    {
+        return DB::table('lista_comercio_mercado')
+            ->join('comercios', 'lista_comercio_mercado.id_comercio', '=', 'comercios.id')
+            ->where('lista_comercio_mercado.id_mercado', $id)
+            ->select('comercios.*')->get();
+    }
+
+    public static function searchCommerces($entidad)
+    {
+        return DB::table('comercios')
+            ->where('nombre', 'LIKE', '%' . $entidad . '%')
+            ->orWhere('slug', 'LIKE', '%' . $entidad . '%')
+            ->get();
+    }
 }

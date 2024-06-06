@@ -14,3 +14,5 @@ export {default as ProfileCustomer} from './profile-customer/ProfileCustomer';
 export {default as Cart} from './cart/Cart';
 export {default as AvailableMarkets} from './available-markets/AvailableMarkets';
 export {default as ProductDetail} from './product-detail/ProductDetail';
+export {default as MarketPage} from './market-page/MarketPage';
+export {default as SearchResult} from './search-result/SearchResult';

@@ -48,37 +48,44 @@ export default function CartPanel() {
     const processOrder = async () => {
         let ordered = await doOrder();
 
-        if(ordered.status){
+        if (ordered.status) {
             navigation('/dashboard');
+        } else {
+            console.log(ordered);
+            if (ordered.code == '401') {
+                navigation('/login', {
+                    state: {error: { severity: 'error', summary: 'Sin autenticar', detail: 'Debes tener una cuenta para continuar' } }
+                })
+            }
         }
     }
 
     return (
         <div className="p-4 h-full flex flex-col">
-            <Toast ref={toast} position="top-center" />
+            <Toast ref={toast} position="bottom-right" />
             <div className="flex">
-            <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-2xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Carrito</p>
+                <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-2xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Carrito</p>
             </div>
             <div className="flex mt-10 w-11/12 m-auto">
-            <div className="w-7/12">
-                <DataView value={products} listTemplate={listTemplate} />
-            </div>
-            <div className="w-5/12 mt-1">
-                <div className="p-6 rounded-lg w-8/12 m-auto">
-                    <Fieldset className="border shadow-md border-gray-200" legend={<div className="flex bg-white rounded-lg">
-                        <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent ">Resumen</p>
-                        </div>} >
-                        <div>
-                        <p className="font-semibold text-aureus-l">Subtotal : {subtotal} €</p>
-                        <hr className="border border-gray-200 border-dashed my-5" />
-                        <Button onClick={processOrder} className="bg-emerald-500 hover:bg-emerald-600 px-2 h-12 w-full rounded-lg text-white" label="Realizar Pedido"></Button>
-                        </div>
-                    </Fieldset>
+                <div className="w-7/12">
+                    <DataView value={products} listTemplate={listTemplate} />
                 </div>
-                
+                <div className="w-5/12 mt-1">
+                    <div className="p-6 rounded-lg w-8/12 m-auto">
+                        <Fieldset className="border shadow-md border-gray-200" legend={<div className="flex bg-white rounded-lg">
+                            <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent ">Resumen</p>
+                        </div>} >
+                            <div>
+                                <p className="font-semibold text-aureus-l">Subtotal : {subtotal} €</p>
+                                <hr className="border border-gray-200 border-dashed my-5" />
+                                <Button onClick={processOrder} className="bg-emerald-500 hover:bg-emerald-600 px-2 h-12 w-full rounded-lg text-white" label="Realizar Pedido"></Button>
+                            </div>
+                        </Fieldset>
+                    </div>
+
+                </div>
             </div>
-            </div>
-           
+
         </div>
     );
 }

@@ -1,10 +1,20 @@
 import { Wrapper, DashboardCommerce, DashboardCustomer } from "pages";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard(){
+    let navigation = useNavigate();
+
+    useEffect(() => {
+        if (!localStorage.getItem('commerceToken') && !localStorage.getItem('token')) {
+            navigation('/login');
+        }
+    },[])
+
     if (localStorage.getItem('commerceToken')) {
         sessionStorage.setItem('entityType', 1);
 
-    } else {
+    } else if(localStorage.getItem('token')) {
         sessionStorage.setItem('entityType', 0);
     }
 

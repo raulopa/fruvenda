@@ -183,7 +183,7 @@ export default function OrderListPanel() {
             </div>
 
             <div className="overflow-y-auto overflow-x-hidden h-full">
-                <Toast ref={toast} />
+            <Toast ref={toast} position="bottom-right" />
                 <Dialog header={'Detalles de pedido'} visible={visibleDialog} style={{ width: '50vw' }} onHide={() => { setVisibleDialog(false); setDetailedOrder(null) }}>
                     {detailedOrder != null &&
                         <OrderDialogContent order={detailedOrder} toast={toast}></OrderDialogContent>

@@ -21,7 +21,7 @@ export default function useOrderService() {
             }
            
         }catch(error){
-            return { status: false, message: error.response?.data?.message || 'An error occurred' };
+            return { status: false, code: error.response?.status, message: error.response?.data?.message || 'An error occurred' };
         }
     }
 

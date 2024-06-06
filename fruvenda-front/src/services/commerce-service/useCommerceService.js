@@ -28,7 +28,9 @@ export default function useCommerceService() {
             let response = await axios.get(`${apiUrl}comercio/${slug}`);
     
             if(response.status == 200){
-                return {status: true, comercio: response.data.comercio};
+                let comercio = {...response.data.comercio, image : response.data.image} 
+                console.log(comercio);
+                return { status: true, comercio: comercio };
             }
         }catch(error){
             return { 'status': false, message: JSON.parse(error.request.responseText).message }

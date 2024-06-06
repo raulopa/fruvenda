@@ -33,4 +33,24 @@ class Market extends Model
     {
         return DB::table('mercados')->whereIn('id', $suscribedMarketsIds)->get();
     }
+
+    public static function getMarkets()
+    {
+        return DB::table('mercados')->get();
+    }
+
+    public static function getMarketBySlug($slug)
+    {
+        return DB::table('mercados')->where('slug', $slug)->first();
+    }
+
+    public static function searchMarkets($entidad)
+    {
+        return DB::table('mercados')
+            ->where('nombre', 'LIKE', '%' . $entidad . '%')
+            ->orWhere('codigo_postal', 'LIKE', '%' . $entidad . '%')
+            ->orWhere('direccion', 'LIKE', '%' . $entidad . '%')
+            ->orWhere('slug', 'LIKE', '%' . $entidad . '%')
+            ->get();
+    }
 }

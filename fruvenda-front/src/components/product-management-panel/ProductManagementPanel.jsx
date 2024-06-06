@@ -128,8 +128,8 @@ export default function ProductManagementPanel() {
 
 
     return (
-        <div>
-            <Toast ref={toast} />
+        <div className="w-full p-4">
+            <Toast ref={toast} position="bottom-right" />
             <Dialog
                 header=""
                 style={{ width: '50%', height: '70%' }}
@@ -152,8 +152,11 @@ export default function ProductManagementPanel() {
                     <AddProductDialogContent product={clickedProduct} restartDialog={restartDialog} setRefresh={setRefresh} toast={toast} />
                 }
             </Dialog>
+            <div className="flex items-center">
             <h1 className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Gestión de Productos</h1>
-            <div>
+
+            </div>
+            <div className="mt-6">
                 <DataTable filters={filters} globalFilterFields={['nombre', 'descripcion', 'stock', 'precio']} removableSort header={<Toolbar start={startContent} end={endContent} />} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} selectionMode="multiple" selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)} value={products}>
                     <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                     <Column header="Imagen" body={imageBodyTemplate}></Column>

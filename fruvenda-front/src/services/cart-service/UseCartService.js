@@ -27,6 +27,7 @@ export default function useCartService() {
             localStorage.setItem('cartToken', response.data.cartToken);
             return { status: true, data: response.data };
         } catch (error) {
+            
             return { status: false, message: error.response?.data?.message || 'An error occurred' };
         }
     }

@@ -28,11 +28,43 @@ class MarketController extends Controller
             ], $error->getCode());
         }
     }
+
+    public function getMercados(){
+        try {
+            $markets = Market::getMarkets();
+
+            return response()->json([
+                'status' => true,
+                'markets' => $markets
+            ], 200);
+        } catch (Error $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], $error->getCode());
+        }
+    }
+    public function getMercado($slug){
+        try {
+            $market = Market::getMarketBySlug($slug);
+
+            return response()->json([
+                'status' => true,
+                'market' => $market
+            ], 200);
+        } catch (Error $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], $error->getCode());
+        }
+    }
     public function suscribedMarkets()
     {
         try {
             $user = Auth::user();
             $comercio = Commerce::findCommerce($user->email);
+
             if ($comercio) {
                 $suscribedMarketsIds = Market::getSuscribedMarkets($comercio->id)->toArray();
                 $suscribedMarketsIds = array_map(function($market) {

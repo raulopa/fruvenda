@@ -137,7 +137,7 @@ export default function OrderListCustomer() {
                 </div>
                 <Button onClick={()=> setRefresh(!refresh)} className="w-10 h-10 bg-gradient-to-r to-green-500 from-emerald-600 text-white hover:animate-gradient-x rounded-full"  icon="pi pi-refresh"></Button>
             </div>
-            <Toast position="top-center" ref={toast} />
+            <Toast ref={toast} position="bottom-right" />
             <Dialog header={'Detalles de pedido'} visible={visibleDialog} style={{ width: '50vw' }} onHide={() => { setVisibleDialog(false); setDetailedOrder(null) }}>
                 {detailedOrder != null &&
                     <OrderDialogContent order={detailedOrder} toast={toast}></OrderDialogContent>

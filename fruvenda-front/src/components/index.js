@@ -21,3 +21,5 @@ export {default as PostsProfilePanel} from './posts-profile-panel/PostsProfilePa
 export {default as FollowedMarketsProfilePanel} from './followed-markets-profile/FollowedMarketsProfilePanel';
 export {default as LastPostsCustomerDashboard} from './last-post-customer-dashboard/LastPostsCustomerDashboard';
 export {default as ProductDetailPanel} from './product-detail-panel/ProductDetailPanel';
+export {default as MarketPagePanel} from './market-page-panel/MarketPagePanel';
+export {default as SearchResultPanel} from  './search-result-panel/SearchResultPanel';

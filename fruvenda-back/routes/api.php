@@ -8,6 +8,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
+
+
 /* AUTENTICACIÓN BÁSICA */
 //Registro
 Route::post('/registro', [Controllers\AuthController::class, 'registro']);
@@ -15,7 +18,7 @@ Route::post('/registroComercio', [Controllers\CommerceController::class, 'regist
 Route::post('/registroCliente', [Controllers\CustomerController::class, 'registerCliente']);
 //Login
 Route::post('/login', [Controllers\AuthController::class, 'login']);
-
+Route::get('/buscar/{entidad}', [Controllers\SearchController::class, 'searchEntidad']);
 
 /* CLIENTE */
 Route::group(['prefix' => 'usuario', 'middleware' => ['auth:sanctum']], function (){
@@ -50,6 +53,7 @@ Route::group(['prefix' => 'comercio', 'middleware' => ['auth:sanctum']], functio
     Route::delete('/delete', [Controllers\CommerceController::class, 'deleteComercio']);
 });
 Route::group(['prefix' => 'comercio'], function (){
+    Route::get('/mercado/{id}',  [Controllers\CommerceController::class, 'getCommercesByMarket']);
     Route::get('/resenas/{slug}',  [Controllers\CommerceController::class, 'getResenasComercioBySlug']);
     Route::get('/{slug}',  [Controllers\CommerceController::class, 'getCommerceBySlug']);
 
@@ -73,14 +77,18 @@ Route::group(['prefix' => 'pedidos', 'middleware' => ['auth:sanctum']], function
 });
 
 /* MERCADO */
-Route::group(['prefix' => 'mercado'], function (){
-    Route::get('/buscar/{cp}', [Controllers\MarketController::class, 'searchMarketsByCp']);
-});
-
 Route::group(['prefix' => 'mercado', 'middleware' => ['auth:sanctum']], function (){
     Route::post('/suscribir', [Controllers\MarketController::class, 'suscribeToMarket']);
     Route::get('/suscrito', [Controllers\MarketController::class, 'suscribedMarkets']);
 });
+
+Route::group(['prefix' => 'mercado'], function (){
+    Route::get('/{slug}', [Controllers\MarketController::class, 'getMercado']);
+    Route::get('/buscar/{cp}', [Controllers\MarketController::class, 'searchMarketsByCp']);
+    Route::get('/', [Controllers\MarketController::class, 'getMercados']);
+});
+
+
 
 /* RESEÑAS */
 Route::group(['prefix' => 'resenas', 'middleware' => ['auth:sanctum']], function (){

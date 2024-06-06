@@ -26,7 +26,7 @@ class ProductController extends Controller
         $products = Product::getProducts($productsId);
         if($products){
             foreach ($products as $product){
-                $images = (new ProductController)->getProductImages($product->id_comercio, $product->id);
+                $images = ProductController::getProductImages($product->id_comercio, $product->id);
                 $product->images = $images;
                 foreach ($cartContent as $linea){
                     if($product->id == $linea->id_producto){
@@ -64,7 +64,7 @@ class ProductController extends Controller
             }
 
             $products->transform(function ($product) use ($comercio) {
-                $product->images = $this->getProductImages($comercio->id, $product->id);
+                $product->images = self::getProductImages($comercio->id, $product->id);
                 return $product;
             });
 
@@ -90,7 +90,7 @@ class ProductController extends Controller
                     'message' => 'El producto no existe'
                 ]);
             }
-            $product->images = $this->getProductImages($product->id_comercio, $product->id);
+            $product->images = self::getProductImages($product->id_comercio, $product->id);
 
             return response()->json([
                 'status' => true,
@@ -118,7 +118,7 @@ class ProductController extends Controller
             }
 
             $products->transform(function ($product) use ($id) {
-                $product->images = $this->getProductImages($id, $product->id);
+                $product->images = self::getProductImages($id, $product->id);
                 return $product;
             });
 
@@ -134,7 +134,27 @@ class ProductController extends Controller
         }
     }
 
-    public function getProductImages($commerceId, $productId)
+    public static function getProductosComercioMercado($id)
+    {
+        try {
+            $products = Product::getByCommerceIdForCustomer($id);
+
+            if ($products->isEmpty()) {
+                return [];
+            }
+
+            $products->transform(function ($product) use ($id) {
+                $product->images = self::getProductImages($id, $product->id);
+                return $product;
+            });
+
+            return $products;
+        } catch (\Exception $error) {
+            return [];
+        }
+    }
+
+    public static function getProductImages($commerceId, $productId)
     {
         $productDir = public_path("images/commerce/{$commerceId}/{$productId}");
         if (file_exists($productDir) && is_dir($productDir)) {

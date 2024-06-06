@@ -14,6 +14,7 @@ export default function MarketManagementPanel({ restartDialog, toast }) {
 
     useEffect(()=> {
         searchSuscribedMarket().then((suscribed) => {
+            console.log(suscribed);
             setMarketsSuscribed(suscribed.markets);
         });
     }, []);
