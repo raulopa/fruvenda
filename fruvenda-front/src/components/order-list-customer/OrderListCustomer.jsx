@@ -148,7 +148,7 @@ export default function OrderListCustomer() {
     );
 
     return (
-        <div className="border border-emerald-500 flex flex-col justify-center items-start rounded-xl w-full p-2 shadow-xl h-full">
+        <div className="border border-emerald-500 h-5/6 lg:md:h-full flex flex-col justify-center items-start rounded-xl w-full p-2 shadow-xl overflow-y-auto">
             <div className="flex justify-between items-center w-full">
                 <div className="flex ">
                 <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Tus pedidos</p>
@@ -161,7 +161,7 @@ export default function OrderListCustomer() {
                     <OrderDialogContent order={detailedOrder} toast={toast}></OrderDialogContent>
                 }
             </Dialog>
-            <DataTable removableSort className="text-aureus-m h-full w-full" value={orders} tableStyle={{ minWidth: '20rem' }}>
+            <DataTable removableSort className="text-aureus-m h-5/6 w-full" value={orders} tableStyle={{ minWidth: '20rem' }}>
                 <Column field="id" header="Id" ></Column>
                 {!phone && <Column sortable field="fecha_hora" header="Fecha"></Column>}
                 <Column sortable field="estado" header="Estado" body={estadoTemplate}></Column>

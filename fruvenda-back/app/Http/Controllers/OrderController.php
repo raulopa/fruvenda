@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ActionNotAuthorized;
 use App\Exceptions\ValidationError;
+use App\Mail\MailCreatedOrder;
+use App\Mail\StatusChangedMail;
 use App\Models\Cart;
 use App\Models\Commerce;
 use App\Models\Customer;
@@ -14,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Pusher\Pusher;
 
@@ -71,7 +74,7 @@ class OrderController extends Controller
                 // Emitir el evento 'nuevo-pedido' a un canal específico, por ejemplo, 'pedidos'
                 $pusher->trigger('pedidos', 'nuevo-pedido', array_keys($groupedProducts));
 
-
+                Mail::to($customer->email)->send(new MailCreatedOrder());
                 return response()->json([
                     'status' => true,
                     'message' => 'Pedidos realizados correctamente',
@@ -161,6 +164,11 @@ class OrderController extends Controller
                     ]
                 );
                 $pusher->trigger('estados', 'nuevo-estado', $order->id_cliente);
+
+                $customer = Customer::findCustomerById($order->id_cliente);
+                if($customer){
+                    Mail::to($customer->email)->send(new StatusChangedMail('cancelado'));
+                }
 
                 return response()->json([
                     'status' => true,
@@ -316,6 +324,10 @@ class OrderController extends Controller
 
                 // Emitir el evento 'nuevo-pedido' a un canal específico, por ejemplo, 'pedidos'
                 $pusher->trigger('estados', 'nuevo-estado', $order->id_cliente);
+                $customer = Customer::findCustomerById($order->id_cliente);
+                if($customer){
+                    Mail::to($customer->email)->send(new StatusChangedMail($estado));
+                }
 
                 return response()->json([
                     'status' => true,

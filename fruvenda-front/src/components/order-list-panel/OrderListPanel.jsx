@@ -10,7 +10,7 @@ import OrderDialogContent from "./order-dialog-content/OrderDialogContent";
 import { OverlayPanel } from 'primereact/overlaypanel';
 import Pusher from "pusher-js";
 
-export default function OrderListPanel({externalRefresh}) {
+export default function OrderListPanel({ externalRefresh }) {
     const toast = useRef();
     const [orders, setOrders] = useState([]);
     const [visibleDialog, setVisibleDialog] = useState(false);
@@ -65,7 +65,7 @@ export default function OrderListPanel({externalRefresh}) {
             channel.unbind_all();
             channel.unsubscribe();
         };
-        
+
     }, [refresh, externalRefresh]);
 
     const pusher = new Pusher('8caaee086e75a8c793aa', {
@@ -127,6 +127,8 @@ export default function OrderListPanel({externalRefresh}) {
                 return 'warning';
             case 'preparacion':
                 return 'success';
+            case 'listo':
+                return 'info'
             case 'entregado':
                 return 'info';
             default:
@@ -167,11 +169,17 @@ export default function OrderListPanel({externalRefresh}) {
                             <Tag className="w-full capitalize" severity={getSeverity('preparacion')} value={'preparacion'}></Tag>
                         </div>
                     </Button>
-                    <Button onClick={() => handleStatus('entregado', order)} className="w-full mt-2">
+                    <Button onClick={() => handleStatus('listo', order)} className="w-full mt-2">
                         <div className="w-full flex justify-center">
-                            <Tag className="w-full px-6 capitalize" severity={getSeverity('entregado')} value={'entregado'}></Tag>
+                            <Tag className="w-full px-6 capitalize bg-" severity={getSeverity('listo')} value={'listo'}></Tag>
                         </div>
                     </Button>
+                    <Button onClick={() => handleStatus('entregado', order)} className="w-full mt-2">
+                        <div className="w-full flex justify-center">
+                            <Tag className="w-full px-6 capitalize bg-purple-400" severity={getSeverity('entregado')} value={'entregado'}></Tag>
+                        </div>
+                    </Button>
+                    
                     <Button onClick={() => handleStatus('cancelado', order)} className="w-full mt-2">
                         <div className="w-full flex justify-center">
                             <Tag className="w-full px-6 capitalize bg-black" severity={getSeverity('cancelado')} value={'cancelado'}></Tag>
@@ -192,14 +200,14 @@ export default function OrderListPanel({externalRefresh}) {
         <div>
             <div className="flex justify-between items-center">
                 <div className="flex ">
-                <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Tus pedidos</p>
+                    <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Tus pedidos</p>
                 </div>
-                <Button onClick={()=> setRefresh(!refresh)} className="w-10 h-10 bg-gradient-to-r to-green-500 from-emerald-600 text-white hover:animate-gradient-x rounded-full"  icon="pi pi-refresh"></Button>
+                <Button onClick={() => setRefresh(!refresh)} className="w-10 h-10 bg-gradient-to-r to-green-500 from-emerald-600 text-white hover:animate-gradient-x rounded-full" icon="pi pi-refresh"></Button>
             </div>
 
             <div className="overflow-y-auto overflow-x-hidden h-full">
-            <Toast ref={toast} position="bottom-right" />
-                <Dialog header={'Detalles de pedido'} visible={visibleDialog} style={{ width: phone ? '100vw' : '50vw' , height: '60%'}} onHide={() => { setVisibleDialog(false); setDetailedOrder(null) }}>
+                <Toast ref={toast} position="bottom-right" />
+                <Dialog header={'Detalles de pedido'} visible={visibleDialog} style={{ width: phone ? '100vw' : '50vw', height: '60%' }} onHide={() => { setVisibleDialog(false); setDetailedOrder(null) }}>
                     {detailedOrder != null &&
                         <OrderDialogContent order={detailedOrder} toast={toast}></OrderDialogContent>
                     }
@@ -211,7 +219,7 @@ export default function OrderListPanel({externalRefresh}) {
                     <Column body={detailsTemplate}></Column>
                 </DataTable>
             </div>
-                   
+
         </div>
     );
 
