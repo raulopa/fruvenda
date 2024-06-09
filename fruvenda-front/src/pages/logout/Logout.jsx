@@ -12,6 +12,7 @@ const Logout = () => {
             sessionStorage.removeItem('entityType');
             navigate('/login');
         });
+        
     }, [navigate]);
 
     return (

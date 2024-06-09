@@ -5,22 +5,34 @@ import { Button } from "primereact/button";
 import { MiniStoreSmile } from "react-huge-icons/bulk";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AvailableMarketsPanel() {
     let navigation = useNavigate();
+    let location = useLocation();
     const [markets, setMarkets] = useState([]);
-    const [value, setValue] = useState('');
     const [filteredMarkets, setFilteredMarkets] = useState(markets);
     const { getMarkets } = useMarketService();
+    const message = location.state?.message || null;
+    const [value, setValue] = useState(message != null ? message : '');
+    
     useEffect(() => {
         getMarkets().then((response) => {
             if (response.status) {
-                setMarkets(response.markets)
-                setFilteredMarkets(response.markets)
+                setMarkets(response.markets);
+                if (message) {
+                    const filteredByMessage = response.markets.filter(market =>
+                        market.nombre.toLowerCase().includes(message.toLowerCase()) ||
+                        market.direccion.toLowerCase().includes(message.toLowerCase()) ||
+                        market.codigo_postal.toLowerCase().includes(message.toLowerCase())
+                    );
+                    setFilteredMarkets(filteredByMessage);
+                } else {
+                    setFilteredMarkets(response.markets);
+                }
             }
         });
-    }, []);
+    }, [message]);
 
     const handleNavigation = (slug) => {
         navigation(`/markets/${slug}`)
@@ -76,17 +88,17 @@ export default function AvailableMarketsPanel() {
     };
 
     return (
-        <div className="p-4 h-full w-full">
-            <div className="flex">
+        <div className="p-4 h-full w-full lg:md:mt-0 mt-16">
+            <div className="flex justify-center lg:md:justify-start">
                 <h1 className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Mercados disponibles</h1>
             </div>
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center lg:md:mt-0 mt-4">
                 <div className="flex justify-center">
 
                     <FloatLabel>
-                        <InputText id="search" value={value} onChange={handleFilter} className=" p-6 w-96 h-16 text-aureus-l text-gray-500 border border-emerald-500 rounded-full" />
+                        <InputText id="search" value={value} onChange={handleFilter} className="p-6 w-80 lg:md:w-96 h-16 text-aureus-m lg:md:text-aureus-l text-gray-500 border border-emerald-500 rounded-full" />
                         <label htmlFor="search">
-                            <p className="font-outfit-semibold text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-500 bg-clip-text font-bold text-transparent">Encuentra tu mercado más cercano ...</p>
+                            <p className="font-outfit-semibold text-sm lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-500 bg-clip-text font-bold text-transparent">Encuentra tu mercado más cercano ...</p>
                         </label>
                     </FloatLabel>
                 </div>

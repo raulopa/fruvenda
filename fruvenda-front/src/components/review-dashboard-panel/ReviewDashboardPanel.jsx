@@ -30,22 +30,22 @@ export default function ReviewDashboardPanel({toast}){
     const itemTemplate = (review, index) => {
         return (
             <div key={index} className="border border-gray-200 rounded-xl overflow-hidden my-4">
-                <div className="flex justify-between items-center w-full bg-gray-100 p-4">
-                    <div className="flex justify-start items-center w-6/12 ">
+                <div className="flex flex-col lg:md:flex-row lg:md:justify-between justify-center items-center w-full bg-gray-100 p-4">
+                    <div className="flex justify-start items-center w-full lg:md:w-6/12 ">
                         <img className="rounded-full w-12 h-12" src={review.cliente_foto} alt="Foto de perfil de cliente" />
                         <p className="ml-6 w-6/12">{review.cliente_nombre}</p>
                     </div>
-                    <div className="flex justify-around">
+                    <div className="flex justify-around w-full">
                         <Rating readOnly value={review.valoracion} cancel={false} />
-                        <Button onClick={()=> handleDelete(review.id)} icon="pi pi-times" className="mx-6 w-12 h-12 border-red-500 border rounded-full text-red-500 hover:bg-red-500 hover:text-white" />
+                        <Button onClick={()=> handleDelete(review.id)} icon="pi pi-times" className="lg:md:mx-6 lg:md:w-12 w-10 lg:md:h-12 h-10 border-red-500 border rounded-full text-red-500 hover:bg-red-500 hover:text-white" />
                     </div>
                 </div>
                 <div className=" p-4">
-                    <div className="w-full h-16">
-                        <p className="text-aureus-l text-black font-semibold">{review.titulo}</p>
+                    <div className="w-full h-10 lg:md:h-16">
+                        <p className="text-aureus-m lg:md:text-aureus-l text-black font-semibold">{review.titulo}</p>
                     </div>
                     <div>
-                    <p className="text-aureus-m h-20 w-full break-words">{review.cuerpo}</p>
+                    <p className="text-sm lg:md:text-aureus-m h-20 w-full break-words">{review.cuerpo}</p>
                     </div>
                 </div>
                 <div className="flex justify-end text-gray-500 p-4">

@@ -45,7 +45,7 @@ export default function SellProductCardMarket({ product }) {
     }
 
     return (
-        <Card header={header} title={title(product.nombre)} className="h-80 w-72 border border-slate-200 rounded-xl p-4 my-2 relative">
+        <Card header={header} title={title(product.nombre)} className="h-80 lg:w-72 border border-slate-200 rounded-xl p-4 my-2 relative">
             <div className="w-12/12 p-2 flex items-center justify-between absolute left-0 right-0 bottom-0">
                 {sessionStorage.getItem('entityType') !== '1' && (
                     <div className="flex w-10/12">

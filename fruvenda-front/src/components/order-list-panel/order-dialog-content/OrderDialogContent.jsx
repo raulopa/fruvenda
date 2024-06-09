@@ -8,11 +8,28 @@ import { useState, useEffect } from "react";
 export default function OrderDialogContent({order, toast}){
 
     const [total, setTotal] = useState(0);
+    const [phone, setPhone] = useState(false);
 
     useEffect(() => {
         let newTotal = order.rows.reduce((acc, product) => acc + product.precio_producto * product.cantidad, 0);
         setTotal(newTotal);
-    }, [order.rows]); // Recalcula el total cuando los productos cambian
+    }, [order.rows]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 600) {
+                setPhone(true)
+            } else {
+                setPhone(false)
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const getSeverity = (estado) => {
         switch (estado) {

@@ -28,7 +28,7 @@ class CommerceController extends Controller
             if ($validator->fails()) {
                 throw new ValidationError($validator->errors()->toArray(), 400);
             }
-            $userTableData = $request->only(['nombre', 'email', 'password', 'password_confirmation']);
+            $userTableData = $request->only(['nombre', 'email', 'password', 'password_confirmation', 'slug']);
             $requestUser = new RegisterRequest;
             $requestUser->merge($userTableData);
             $responseAuth = AuthController::registro($requestUser);
@@ -37,7 +37,6 @@ class CommerceController extends Controller
                 $commerceTableData['activo'] = true;
 
                 $comercio = Commerce::createCommerce($commerceTableData);
-                Commerce::createSlug($comercio->id, Str::slug($comercio->nombre) . '-' . $comercio->id);
                 return response()->json([
                     'status' => true,
                     'type' => 1,
@@ -45,18 +44,18 @@ class CommerceController extends Controller
                     'auth' => $responseAuth
                 ], 200);
             } else {
-                throw new AuthError($responseAuth);
+                throw new AuthError(json_encode($responseAuth));
             }
         } catch (AuthError|ValidationError $error) {
             return response()->json([
                 'status' => false,
-                'message' => $error->getMessage()
-            ], $error->getCode());
+                'message' => json_encode($error->getMessage())
+            ], 401);
         } catch (Error $error) {
             return response()->json([
                 'status' => false,
-                'message' => $error->getMessage()
-            ], $error->getCode());
+                'message' =>json_encode($error->getMessage()) ,
+            ], 400);
         }
     }
 
@@ -108,6 +107,7 @@ class CommerceController extends Controller
         if ($comercio) {
             return [
                 'nombreCompleto' => $comercio->nombre,
+                'slug' => $comercio->slug,
                 'imagen' => self::getProfileImageUrl($user->id)
             ];
         } else {

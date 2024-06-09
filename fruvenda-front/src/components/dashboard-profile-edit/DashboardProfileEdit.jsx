@@ -51,14 +51,14 @@ export default function DashboardProfileEdit({ customer, edit, refresh }) {
     };
 
     return (
-        <div className="border border-emerald-500 flex flex-col justify-center items-start rounded-xl w-11/12 p-2 shadow-xl">
+        <div className="border border-emerald-500 flex flex-col justify-center items-start rounded-xl w-full  lg:md:w-11/12 p-2 shadow-xl">
             <div className="flex">
                 <p className="font-outfit-semibold pl-2 pt-2 pb-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">
                     Tus datos
                 </p>
             </div>
-            <div className="flex justify-center items-center">
-                <div className="h-60 relative w-72">
+            <div className="flex lg:md:flex-row flex-col justify-center items-center">
+                <div className="h-60 relative w-72 flex justify-center lg:md:block">
                     {preview ? (
                         <img src={preview} alt="Customer profile" className="h-full w-60 aspect-square rounded-full" />
                     ) : (
@@ -91,7 +91,7 @@ export default function DashboardProfileEdit({ customer, edit, refresh }) {
                         </div>
                     )}
                 </div>
-                <div className="ml-10">
+                <div className="lg:md:ml-10">
                     <div className="flex justify-start items-baseline h-16">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">
                             Nombre:

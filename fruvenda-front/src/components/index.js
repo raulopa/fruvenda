@@ -23,3 +23,6 @@ export {default as LastPostsCustomerDashboard} from './last-post-customer-dashbo
 export {default as ProductDetailPanel} from './product-detail-panel/ProductDetailPanel';
 export {default as MarketPagePanel} from './market-page-panel/MarketPagePanel';
 export {default as SearchResultPanel} from  './search-result-panel/SearchResultPanel';
+export {default as OrderManagementPanel} from './order-management-panel/OrderManagementPanel';
+export {default as OrderManagementPanelCustomer} from './order-management-panel-customer/OrderManagementPanelCustomer';
+export {default as TakeOrderPanel} from './take-order-panel/TakeOrderPanel';

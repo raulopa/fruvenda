@@ -54,9 +54,9 @@ export default function PostsProfilePanel() {
         return (
             <div key={index} className="overflow-hidden rounded-lg border-gray-100 border mb-4">
                 <div>
-                    <p className="text-aureus-m h-20 w-full break-words p-2">{post.cuerpo}</p>
+                    <p className="text-sm lg:md:text-aureus-m h-20 w-full break-words p-2">{post.cuerpo}</p>
                 </div>
-                <div className="flex justify-end text-gray-400 p-4 mt-6">
+                <div className="flex justify-end text-gray-400 text-sm lg:md:text-aureus-m  p-4 mt-6">
                     <p>{post.fecha}</p>
                 </div>
             </div>
@@ -79,9 +79,9 @@ export default function PostsProfilePanel() {
     };
 
     return (
-        <div className="w-8/12 m-auto">
+        <div className="w-full lg:md:w-8/12 m-auto">
             <div className="bg-gray-100 rounded-lg p-4">
-                <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por fecha" onChange={onSortChange} className="w-6/12" />
+                <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por fecha" onChange={onSortChange} className="w-fulll lg:md:w-6/12" />
             </div>
             <hr className="my-4" />
             {posts.length == 0 && 'No tienes publicado ningún post...'}

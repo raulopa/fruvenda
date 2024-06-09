@@ -51,4 +51,11 @@ class Product extends Model
     {
         return DB::table('productos')->where('id', $id)->first();
     }
+
+    public static function subtractStock($item)
+    {
+        DB::table('productos')
+            ->where('id', $item['id_producto'])
+            ->decrement('stock', $item['cantidad']);
+    }
 }

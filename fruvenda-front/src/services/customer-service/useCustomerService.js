@@ -24,6 +24,20 @@ export default function useCustomerService() {
         }
     }
 
+    async function getCustomerById(id) {
+        try {
+            let token = localStorage.getItem('token');
+            let response = await axios.get(`${apiUrl}usuario/${id}`);
+
+            if (response.status == 200) {
+                let cliente = { ...response.data.cliente, image: response.data.image }
+                return { status: true, cliente: cliente };
+            }
+        } catch (error) {
+            return { 'status': false, message: JSON.parse(error.request.responseText).message }
+        }
+    }
+
 
     async function editCustomer(cliente, token) {
         try {
@@ -137,6 +151,7 @@ export default function useCustomerService() {
 
     return {
         getCustomer,
+        getCustomerById,
         editCustomer,
         getFollowCommerce,
         setFollowCommerce,

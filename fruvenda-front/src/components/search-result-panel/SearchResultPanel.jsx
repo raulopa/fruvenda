@@ -44,7 +44,7 @@ export default function SearchResultPanel() {
                 <img className="mr-6 rounded-full w-20 h-20" src={item.foto_perfil} alt={item.foto_perfil} />
                 <div>
                     <p className="-outfit-semibold pl-2 text-aureus-m lg:text-aureus-l bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-transparent">{item.nombre}</p>
-                    <p className="pl-2 text-gray-400">@{item.slug}</p>
+                    <p className="pl-2 text-gray-400">{item.slug}</p>
                 </div>
             </div>
             <hr className=" border-gray-100 border" />
@@ -81,13 +81,13 @@ export default function SearchResultPanel() {
 
     return (
         <div className="p-4 h-full w-full">
-            <div className="flex">
+            <div className="flex mt-16 lg:md:mt-0">
                 <h1 className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Resultados</h1>
             </div>
 
             {commerces.length > 0 &&
                 <div className="w-full">
-                    <div className="flex mt-10">
+                    <div className="flex lg:md:mt-10 mt-2">
                         <h2 className="font-outfit-semibold p-2 text-aureus-m lg:text-aureus-l bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-transparent">Comercios</h2>
                     </div>
                     <DataView value={commerces} listTemplate={listTemplate} />

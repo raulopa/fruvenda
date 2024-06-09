@@ -23,20 +23,20 @@ export default function useAuthService() {
                 return {'status' : response.status, 'errors': response.errors}
             }
         } catch (error) {
-            console.log(error);
-            return { 'status': false, errors: JSON.parse(error.request.responseText).errors }
+            return { 'status': false, message: JSON.parse(error.request.responseText).message }
         }
     }
 
     async function registrarComercio(formValues) {
         try {
             let response = await axios.post(`${apiUrl}registroComercio`, {
-                'cif': formValues.cif.value,
-                'nombre': formValues.nombre.value,
-                'telefono': formValues.telefono.value,
-                'email': formValues.email.value,
-                'password': formValues.password.value,
-                'password_confirmation': formValues.password_confirmation.value
+                'cif': formValues.cif,
+                'nombre': formValues.nombre,
+                'telefono': formValues.telefono,
+                'email': formValues.email,
+                'password': formValues.password,
+                'password_confirmation': formValues.password_confirmation,
+                'slug' : '@' + formValues.slug
             });
 
             if (response.status == 200) {
@@ -48,7 +48,6 @@ export default function useAuthService() {
                 return {'status' : response.status, 'errors': response.errors}
             }
         } catch (error) {
-            console.log(error);
             return { 'status': false, message: JSON.parse(error.request.responseText).message }
         }
     }

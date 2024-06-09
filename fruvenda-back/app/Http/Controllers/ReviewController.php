@@ -101,6 +101,46 @@ class ReviewController extends Controller
         }
     }
 
+    public function getResenasClienteById($id){
+        try {
+            $cliente = Customer::findCustomerById($id);
+            if ($cliente) {
+                $resenas = Review::getReviewsCustomer($cliente->id)->toArray();
+                $resenasConClientes = array_map(function($resena) {
+                    $cliente = CustomerController::getNombreProfile($resena->id_cliente); // Asegúrate de tener este método
+                    return [
+                        'id' => $resena->id,
+                        'comercio_id' => $resena->id_comercio,
+                        'cliente_id' => $resena->id_cliente,
+                        'valoracion' => $resena->valoracion,
+                        'titulo' => $resena->titulo,
+                        'cuerpo' => $resena->cuerpo,
+                        'fecha' => $resena->fecha,
+                        'cliente_nombre' => $cliente['nombreCompleto'] ,
+                        'cliente_foto' => $cliente['imagen'],
+                    ];
+                }, $resenas);
+                return response()->json([
+                    'status' => true,
+                    'resenas' => $resenasConClientes
+                ], 200);
+            } else {
+                throw new ActionNotAuthorized();
+            }
+        } catch (ActionNotAuthorized $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], 403); // Código de estado explícito para no autorizado
+        } catch (\Exception $error) {
+            $statusCode = is_int($error->getCode()) && $error->getCode() > 0 ? $error->getCode() : 400;
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], $statusCode);
+        }
+    }
+
     public function getResenasComercio(){
         try {
             $user = Auth::user();

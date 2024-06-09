@@ -42,7 +42,7 @@ export default function CartPanel() {
             return itemTemplate(product, index);
         });
 
-        return <div className="grid grid-nogutter">{list}</div>;
+        return <div className="grid">{list}</div>;
     };
 
     const processOrder = async () => {
@@ -63,15 +63,15 @@ export default function CartPanel() {
     return (
         <div className="p-4 h-full flex flex-col">
             <Toast ref={toast} position="bottom-right" />
-            <div className="flex">
+            <div className="flex mt-16 lg:md:mt-0">
                 <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-2xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Carrito</p>
             </div>
-            <div className="flex mt-10 w-11/12 m-auto">
-                <div className="w-7/12">
+            <div className="flex lg:md:flex-row flex-col-reverse mt-10 w-11/12 m-auto">
+                <div className="w-full lg:md:w-7/12">
                     <DataView value={products} listTemplate={listTemplate} />
                 </div>
-                <div className="w-5/12 mt-1">
-                    <div className="p-6 rounded-lg w-8/12 m-auto">
+                <div className="w-full lg:md:w-5/12 lg:md:mt-1 -mt-10 mb-10">
+                    <div className="lg:md:p-6 rounded-lg w-full lg:md:w-8/12 m-auto">
                         <Fieldset className="border shadow-md border-gray-200" legend={<div className="flex bg-white rounded-lg">
                             <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent ">Resumen</p>
                         </div>} >

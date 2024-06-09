@@ -30,6 +30,7 @@ class Cart extends Model
     }
 
     public static function addProductToCart($cartId, $cartLine) {
+        $producto = Product::getProduct($cartLine['id']);
         $existingCartLine = DB::table('lineas_carrito')
             ->where('id_carrito', $cartId)
             ->where('id_producto', $cartLine['id'])
@@ -40,7 +41,7 @@ class Cart extends Model
                 ->where('id_carrito', $cartId)
                 ->where('id_producto', $cartLine['id'])
                 ->update([
-                    'cantidad' => $existingCartLine->cantidad + $cartLine['cantidad']
+                    'cantidad' => $producto->stock < ($existingCartLine->cantidad + $cartLine['cantidad']) ? $producto->stock : $existingCartLine->cantidad + $cartLine['cantidad']
                 ]);
         } else {
             DB::table('lineas_carrito')->insert([
@@ -63,6 +64,11 @@ class Cart extends Model
     public static function setInvisibleCart(string $cartId)
     {
         DB::table('carritos')->where('id', $cartId)->update(['activo' => 0]);
+    }
+
+    public static function getCartLine(string $cartId, mixed $id)
+    {
+        return DB::table('lineas_carrito')->where('id_carrito', $cartId)->where('id_producto', $id)->get();
     }
 
 

@@ -49,6 +49,18 @@ export default function useCommerceService() {
         }  
     }
 
+    async function getReviewsCustomerProfile(slug){
+        try{
+            let response = await axios.get(`${apiUrl}usuario/resenas/${slug}`);
+    
+            if(response.status == 200){
+                return {status: true, reviews: response.data.resenas};
+            }
+        }catch(error){
+            return { 'status': false, message: JSON.parse(error.request.responseText).message }
+        }  
+    }
+
     async function editCommerce(comercio, token){
         try{
             const formData = new FormData();
@@ -81,6 +93,7 @@ export default function useCommerceService() {
         getCommerce,
         getCommerceBySlug,
         getReviewsCommerceProfile,
-        editCommerce
+        editCommerce,
+        getReviewsCustomerProfile
     };
 }

@@ -31,6 +31,11 @@ Route::group(['prefix' => 'usuario', 'middleware' => ['auth:sanctum']], function
     Route::get('/ultimos', [Controllers\CustomerController::class, 'getUltimosPostDeSeguidos']);
 
 });
+Route::group(['prefix' => 'usuario'], function () {
+    Route::get('/{id}', [Controllers\CustomerController::class, 'getClienteById']);
+    Route::get('/resenas/{id}', [Controllers\ReviewController::class, 'getResenasClienteById']);
+});
+
 
 /* PRODUCTOS */
 Route::group(['prefix' => 'productos', 'middleware' => ['auth:sanctum']], function (){
@@ -68,10 +73,13 @@ Route::group(['prefix' => 'carrito'], function (){
 
 /* PEDIDO */
 Route::group(['prefix' => 'pedidos', 'middleware' => ['auth:sanctum']], function (){
-    Route::get('/getPedidos', [Controllers\OrderController::class, 'getPedidosPendientes']);
+    Route::get('/getPedidosPendientes', [Controllers\OrderController::class, 'getPedidosPendientes']);
+    Route::get('/getPedidos', [Controllers\OrderController::class, 'getPedidos']);
     Route::get('/changeEstado/{idOrder}/{estado}', [Controllers\OrderController::class, 'changeEstado']);
     Route::get('/cancelar/{idOrder}', [Controllers\OrderController::class, 'cancelPedido']);
     Route::get('/getPedidosCliente', [Controllers\OrderController::class, 'getPedidosCliente']);
+    Route::get('/getPedidosPendientesCliente', [Controllers\OrderController::class, 'getPedidosPendientesCliente']);
+    Route::post('/tomarPedido', [Controllers\OrderController::class, 'takePedido']);
     Route::get('/{cartToken}',  [Controllers\OrderController::class, 'doPedido']);
 
 });
@@ -88,8 +96,6 @@ Route::group(['prefix' => 'mercado'], function (){
     Route::get('/', [Controllers\MarketController::class, 'getMercados']);
 });
 
-
-
 /* RESEÑAS */
 Route::group(['prefix' => 'resenas', 'middleware' => ['auth:sanctum']], function (){
     Route::post('/enviar/{slug}', [Controllers\ReviewController::class, 'sendResena']);
@@ -101,7 +107,6 @@ Route::group(['prefix' => 'resenas', 'middleware' => ['auth:sanctum']], function
 /* POST */
 Route::group(['prefix' => 'posts', 'middleware' => ['auth:sanctum']], function (){
     Route::get('/comercio', [Controllers\PostController::class, 'getPostComercio']);
-
     Route::post('/publicar', [Controllers\PostController::class, 'publishPost']);
     Route::delete('/{id}', [Controllers\PostController::class, 'deletePost']);
 });
@@ -110,4 +115,15 @@ Route::group(['prefix' => 'posts'], function (){
     Route::get('/comercio/{slug}', [Controllers\PostController::class, 'getPostComerciosBySlug']);
 });
 
+
+/* HORARIOS */
+Route::group(['prefix' => 'horario', 'middleware' => ['auth:sanctum']], function (){
+    Route::get('/', [Controllers\TimetableController::class, 'getHorario']);
+    Route::post('/', [Controllers\TimetableController::class, 'saveHorario']);
+
+});
+
+Route::group(['prefix' => 'horario'], function (){
+    Route::get('/{idComercio}', [Controllers\TimetableController::class, 'ggetTHorario']);
+});
 

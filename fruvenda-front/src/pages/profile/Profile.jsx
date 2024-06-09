@@ -26,7 +26,7 @@ export default function Profile() {
             }
 
         } else {
-            const hasHyphens = /-/g.test(slug);
+            const hasHyphens = /@/g.test(slug);
             setIsCommerceProfile(hasHyphens);
         }
     }, [slug]);

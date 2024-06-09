@@ -9,12 +9,24 @@ export default function OverlayTimetable({ day, setDays, notVisible }) {
     const [cierreDate, setCierre] = useState(day.cierre);
     const [aviso, setAviso] = useState(day.aviso);
     const [festivo, setFestivo] = useState(day.festivo);
-
+    const [invalid, setInvalid] = useState(false);
     const handleSetDays = () => {
+
+
+        if (aperturaDate == '' || aperturaDate == null) {
+            setInvalid(true);
+            return;
+        }
+
+        if (cierreDate == '' || cierreDate == null) {
+            setInvalid(true);
+            return;
+        }
+
         let horaCierre = new Date(cierreDate);
         let horaApertura = new Date(aperturaDate);
-        let cierre = `${horaCierre.getHours()} : ${horaCierre.getMinutes()}`;
-        let apertura = `${horaApertura.getHours()} : ${horaApertura.getMinutes()}`;
+        let cierre = `${horaCierre.getHours() < 10 ? '0' + horaCierre.getHours() : horaCierre.getHours()}:${horaCierre.getMinutes() < 10 ? '0' + horaCierre.getMinutes() : horaCierre.getMinutes()}`;
+        let apertura = `${horaApertura.getHours() < 10 ? '0' + horaApertura.getHours() : horaApertura.getHours()}:${horaApertura.getMinutes() < 10 ? '0' + horaApertura.getMinutes() : horaApertura.getMinutes()}`;
         const updatedDay = {
             ...day
         };
@@ -22,8 +34,6 @@ export default function OverlayTimetable({ day, setDays, notVisible }) {
         updatedDay.cierre = cierre;
         updatedDay.festivo = festivo;
         updatedDay.aviso = aviso;
-        console.log(updatedDay);
-        // Call setDays to update the state in the parent component
         setDays(prevDays => {
             return prevDays.map(d => d.day === day.day ? updatedDay : d);
         });
@@ -35,11 +45,11 @@ export default function OverlayTimetable({ day, setDays, notVisible }) {
             <div className='flex justify-around'>
                 <div className='flex flex-col w-6/12 mb-6 justify-center items-center'>
                     <p>Apertura:</p>
-                    <Calendar value={aperturaDate} onChange={(e) => setApertura(e.value)} timeOnly variant='filled' />
+                    <Calendar className={`rounded-md ${invalid ? 'border border-red-500' : ''}`} value={aperturaDate} onChange={(e) => setApertura(e.value)} timeOnly variant='filled' />
                 </div>
                 <div className='flex flex-col w-5/12 mb-6 justify-center items-center'>
                     <p>Cierre:</p>
-                    <Calendar value={cierreDate} onChange={(e) => setCierre(e.value)} timeOnly variant='filled' />
+                    <Calendar className={`rounded-md ${invalid ? 'border border-red-500' : ''}`} disabled={aperturaDate == '' || aperturaDate == null} minDate={aperturaDate} value={cierreDate == '' ? aperturaDate : cierreDate} onChange={(e) => setCierre(e.value)} timeOnly variant='filled' />
                 </div>
             </div>
             <div className='flex justify-around w-full'>

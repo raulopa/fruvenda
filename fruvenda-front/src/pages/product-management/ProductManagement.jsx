@@ -9,7 +9,7 @@ export default function ProductManagement() {
         if (sessionStorage.getItem('entityType') != '1' && !localStorage.getItem('commerceToken')) {
             navigation('/login');
         }
-    }, [])
+    }, []);
 
     return <div className=' bg-white dark:bg-slate-800'>
         <Wrapper page={<ProductManagementPanel />} />

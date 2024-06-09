@@ -1,24 +1,25 @@
-import { React, useState } from "react";
-import InputForm from "components/input-form/InputForm";
+import { React, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthService from "services/auth-service/UseAuthService";
+import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
 export default function RegisterCommerceForm() {
 
-    let navigation = useNavigate()
+    let navigation = useNavigate();
+    let toast = useRef();
 
     const { registrarComercio } = useAuthService();
 
     const [formValues, setFormValues] = useState({
-        cif: { value: "", required: false },
-        nombre: { value: "", required: false },
-        email: { value: "", required: false },
-        telefono: { value: "", required: false },
-        password: { value: "", required: false },
-        password_confirmation: { value: "", required: false }
+        cif: { value: "", required: true },
+        nombre: { value: "", required: true },
+        email: { value: "", required: true },
+        telefono: { value: "", required: true },
+        password: { value: "", required: true },
+        password_confirmation: { value: "", required: true },
+        slug: { value: "", required: true }
     });
-        
-    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,41 +31,44 @@ export default function RegisterCommerceForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e.target);
         let requeridos = Object.keys(formValues).filter(name => formValues[name].required);
-        const norellenados = requeridos.filter(fieldName => !formValues[fieldName].value.trim());
+        const norellenados = requeridos.filter(fieldName => formValues[fieldName].value === '');
         if (norellenados.length > 0) {
-            alert('Los siguientes campos son requeridos: ' + norellenados);
+            toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: `Los siguientes campos son requeridos: ${norellenados.join(', ')}` });
             return;
         }
-        let validatePassword = validarPassword(formValues.password);
+
+        if (formValues.password.value !== formValues.password_confirmation.value) {
+            toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: 'Las contraseñas no coinciden' });
+            return;
+        }
+
+        let validatePassword = validarPassword(formValues.password.value);
         if (!validatePassword.state) {
-            alert(validatePassword.message);
-            return
+            toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: validatePassword.message });
+            return;
         }
+        let registro = await registrarComercio({
+            cif: formValues.cif.value,
+            nombre: formValues.nombre.value,
+            email: formValues.email.value,
+            telefono: formValues.telefono.value,
+            password: formValues.password.value,
+            password_confirmation: formValues.password_confirmation.value,
+            slug: formValues.slug.value
+        });
 
-        if (formValues.password.value !== formValues["password_confirmation"].value) {
-            alert('Las contraseñas no coinciden');
-            return
-        }
-
-        let registro = await registrarComercio(formValues);
         if (registro.status) {
-            navigation('/dashboard', {
-                replace: true
-            })
+            navigation('/dashboard', { replace: true });
             e.target.reset();
         } else {
-            if(registro.message.includes('(and 1 more error)')){
-                setError('Hay varios errores en el registro');
+            if(registro.message.includes('The email has already been taken')){
+            toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: 'El email ya está en uso'});
             }else{
-                setError(registro.message);
+                toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: registro.message });
+
             }
-            
-        };
-
-
-
+        }
     }
 
     function validarPassword(password) {
@@ -74,23 +78,23 @@ export default function RegisterCommerceForm() {
             numero: /\d/,
             especial: /[!@#$%^&*(),.?":{}|<>]/
         };
-        if (!expresiones.mayuscula.test(password.value)) {
+        if (!expresiones.mayuscula.test(password)) {
             return { state: false, message: "Debe contener al menos una letra mayúscula." };
         }
 
-        if (!expresiones.minuscula.test(password.value)) {
+        if (!expresiones.minuscula.test(password)) {
             return { state: false, message: "Debe contener al menos una letra minúscula." };
         }
 
-        if (!expresiones.numero.test(password.value)) {
+        if (!expresiones.numero.test(password)) {
             return { state: false, message: "Debe contener al menos un número." };
         }
 
-        if (!expresiones.especial.test(password.value)) {
+        if (!expresiones.especial.test(password)) {
             return { state: false, message: "Debe contener al menos un carácter especial." };
         }
 
-        if (password.value.length < 8) {
+        if (password.length < 8) {
             return { state: false, message: "Debe tener al menos 8 caracteres." };
         }
 
@@ -98,34 +102,35 @@ export default function RegisterCommerceForm() {
     }
 
     return (
-        <div className=" w-full md:6/12 lg:w-5/12 p-10 mt-2 outline outline-1 outline-gray-200 dark:outline-slate-600 m-auto shadow-xl rounded-2xl flex items-center justify-center transition-all">
+        <div className="w-full mt-20 md:w-6/12 lg:w-5/12 p-10 outline outline-1 outline-gray-200 dark:outline-slate-600 m-auto shadow-xl rounded-2xl flex items-center justify-center transition-all">
+            <Toast ref={toast} position="bottom-right" />
             <div className="w-full">
-                <h1 className="font-outfit-semibold  p-2 text-center text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 bg-clip-text font-bold text-4xl text-transparent">¡Registrate gratis!</h1>
-                <p className="text-red-400 font-outfit-bold">{error}</p>
-                <form className="text-center dark:text-white w-6/12 mx-auto" onSubmit={handleSubmit}>
+                <h1 className="font-outfit-semibold p-2 text-center text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 bg-clip-text font-bold text-4xl text-transparent">¡Regístrate gratis!</h1>
+                <form className="text-center dark:text-white  w-10/12 lg:md:6/12 mx-auto " onSubmit={handleSubmit}>
                     <p className="font-outfit-semibold text-aureus-l mt-4">Sobre tu comercio</p>
-                    <InputForm type={'text'} placeholder={'Código Identificación Fiscal...'} name={'cif'} onChange={handleChange} required={formValues['cif'].required} externalError={error != '' ? true : false} />
-                    <br />
-                    <InputForm type={'text'} placeholder={'Nombre...'} name={'nombre'} onChange={handleChange} required={formValues['nombre'].required} externalError={error != '' ? true : false} />
-                    <br />
-                    <InputForm type={'email'} placeholder={'Email...'} name={'email'} onChange={handleChange} required={formValues['email'].required} externalError={error != '' ? true : false} />
-                    <br />
-                    <InputForm type={'text'} placeholder={'Telefono...'} name={'telefono'} onChange={handleChange} required={formValues['telefono'].required} externalError={error != '' ? true : false} />
-                    <br />
-                    <br />
+                    <InputText name="cif" invalid={formValues['cif'].required} onChange={handleChange} placeholder={'CIF o NIF...'} className="my-2 border border-gray-300 p-2 w-full" />
+                    <InputText name="nombre" invalid={formValues['nombre'].required} onChange={handleChange} placeholder={'Nombre...'} className=" my-2 border border-gray-300 p-2 w-full" />
+                    <InputText keyfilter='email' name="email" invalid={formValues['email'].required} onChange={handleChange} placeholder={'Email...'} className="my-2 border border-gray-300 p-2 w-full" />
+                    <InputText name="telefono" invalid={formValues['telefono'].required} onChange={handleChange} placeholder={'Teléfono...'} className=" my-2 border border-gray-300 p-2 w-full" />
+                    
                     <p className="font-outfit-semibold dark:text-white text-aureus-l">Contraseña</p>
-                    <InputForm type={'password'} placeholder={'Contraseña...'} name={'password'} onChange={handleChange} required={formValues['password'].required} externalError={error != '' ? true : false} />
-                    <br />
-                    <InputForm type={'password'} placeholder={'Confirmar contraseña...'} name={'password_confirmation'} onChange={handleChange} required={formValues['password_confirmation'].required} externalError={error != '' ? true : false} />
-                    <br />
-                    <br />
+                    <InputText type="password" name="password" placeholder={'Contraseña...'} invalid={formValues['password'].required} onChange={handleChange} className="border border-gray-300 p-2 w-full" />
+                    <InputText type="password" name='password_confirmation' placeholder={'Confirmar contraseña...'} invalid={formValues['password_confirmation'].required} onChange={handleChange} className="border my-2  border-gray-300 p-2 w-full" />
+                    
+                    <p className="font-outfit-semibold dark:text-white text-aureus-l">Nombre de usuario</p>
+                    <div className="p-inputgroup flex-1">
+                        <span className="p-inputgroup-addon  my-2">@</span>
+                        <InputText keyfilter={/^[0-9a-z-]+$/} name="slug" placeholder={'Nombre de usuario...'} invalid={formValues['slug'].required} onChange={handleChange} className=" my-2 border border-gray-300 p-2 w-full" />
+                    </div>
+                    
                     <input className="bg-gradient-to-r dark:text-slate-800 to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 text-white w-full py-3 rounded-lg hover:animate-gradient-x cursor-pointer" type="submit" value="Crear cuenta" />
                 </form>
                 <div>
-                    <Link to={'/login'} className=" ">
-                        <p className="font-outfit  text-center lg:text-right p-2 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 bg-clip-text font-bold text-4xl text-transparent">
+                    <Link to={'/login'}>
+                        <p className="font-outfit text-center lg:text-right p-2 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 bg-clip-text font-bold text-4xl text-transparent">
                             ¿Ya tienes cuenta? ¡Inicia sesión!
-                        </p></Link>
+                        </p>
+                    </Link>
                 </div>
             </div>
         </div>

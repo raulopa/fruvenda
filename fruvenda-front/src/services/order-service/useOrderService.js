@@ -25,6 +25,27 @@ export default function useOrderService() {
         }
     }
 
+    async function takeOrder(nombreCliente, lineas){
+        try{
+        let token = localStorage.getItem('commerceToken');
+        let response = await axios.post(`${apiUrl}pedidos/tomarPedido`, {
+            lineas : lineas,
+            nombreCliente : nombreCliente
+        }, {
+            withCredentials: true,
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        });
+         if(response.status == 200){
+            return {status: true, data: response.data}
+         }
+
+        }catch(error){
+            return { status: false, code: error.response?.status, message: error.response?.data?.message || 'An error occurred' };
+        }
+    }
+
     async function changeStatus(id, estado){
         try{
             let token = localStorage.getItem('commerceToken');
@@ -63,10 +84,47 @@ export default function useOrderService() {
     }
     
 
+    async function getOrdersPendingByCommerce(){
+        try{
+            let token = localStorage.getItem('commerceToken');
+            let response = await axios.get(`${apiUrl}pedidos/getPedidosPendientes`, {
+                withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if(response.status){
+                return {status: true, data: response.data.pedidos}
+            }
+        }catch(error){
+            return { status: false, message: error.response?.data?.message || 'An error occurred' };
+        }
+    }
+
+
     async function getOrdersByCommerce(){
         try{
             let token = localStorage.getItem('commerceToken');
             let response = await axios.get(`${apiUrl}pedidos/getPedidos`, {
+                withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if(response.status){
+                return {status: true, data: response.data.pedidos}
+            }
+        }catch(error){
+            return { status: false, message: error.response?.data?.message || 'An error occurred' };
+        }
+    }
+
+    async function getPendingOrdersByCustomer(){
+        try{
+            let token = localStorage.getItem('token');
+            let response = await axios.get(`${apiUrl}pedidos/getPedidosPendientesCliente`, {
                 withCredentials: true,
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -101,9 +159,12 @@ export default function useOrderService() {
 
     return {
         doOrder,
+        takeOrder,
         getOrdersByCommerce,
         changeStatus,
         getOrdersByCustomer,
-        cancelOrder
+        cancelOrder,
+        getOrdersPendingByCommerce,
+        getPendingOrdersByCustomer
     };
 }

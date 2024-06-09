@@ -5,11 +5,12 @@ import useCustomerService from "services/customer-service/useCustomerService";
 import { Rating } from "primereact/rating";
 import { TabView, TabPanel } from 'primereact/tabview';
 import { ReviewsProfilePanel, SellProductCommerce, PostsProfilePanel } from "components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 
 export default function ProfileCommerce() {
+    let navigation = useNavigate();
     const { slug } = useParams()
     const [commerce, setCommerce] = useState({});
     const [products, setProducts] = useState([]);
@@ -38,15 +39,22 @@ export default function ProfileCommerce() {
                     if(sessionStorage.getItem('entityType')){
                         getFollowCommerce(response.comercio.id).then((response)=> {
                             setFollowed(response.seguido);
-                        })
+                        });
                     }
+
+                    getCommerceProductsForCustomers(response.comercio.id).then((response) => {
+                        if (Array.isArray(response.products)) {
+                            setProducts(response.products);
+                        }
+                    });
+
+                }else{
+                    navigation('/notFound', {
+                        replace: true,
+                    })
                 }
 
-                getCommerceProductsForCustomers(response.comercio.id).then((response) => {
-                    if (Array.isArray(response.products)) {
-                        setProducts(response.products);
-                    }
-                });
+                
             });
 
            
@@ -84,25 +92,23 @@ export default function ProfileCommerce() {
 
 
     return (
-        <div className="p-4 h-full flex flex-col">
+        <div className="p-4 h-full flex flex-col mt-20 lg:md:mt-0">
             <Toast ref={toast} position="bottom-right" />
-            <div className="h-64 flex items-center">
-                <div className="h-64 relative w-64">
+            <div className="h-64 flex lg:md:flex-row flex-col items-center">
+                <div className="lg:md:h-64 relative lg:md:w-64 h-28 flex items-center w-28">
                     {commerce != null && commerce.image != null ? (
-                        <img src={commerce.image} alt="Commerce profile" className="h-full w-64 aspect-square rounded-full" />
+                        <img src={commerce.image} alt="Commerce profile" className="-mt-5 lg:md:h-full w-28 lg:md:w-64 aspect-square rounded-full" />
                     ) : (
-                        <div className="h-full w-full bg-gray-200 animate-pulse rounded-full"></div>
+                        <div className="h-28 lg:md:h-full w-28 lg:md:w-64 bg-gray-200 animate-pulse rounded-full"></div>
                     )}
                 </div>
-                <div>
+                <div className="flex justify-center flex-col lg:md:items-start items-center">
                     <h1 className="font-outfit-semibold p-2 text-aureus-xl lg:text-aureus-2xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">{commerce.nombre}</h1>
                     <Rating className="ml-2 mt-3" value={commerce.rating} readOnly cancel={false} />
                 </div>
                 {sessionStorage.getItem('entityType') == 0 && <div className="h-full flex items-center mb-4">
                     <Button label={followed ? 'Seguido' : 'Seguir'} icon={followed ? 'pi pi-check' : 'pi pi-plus'} onClick={()=>handleFollow()} className={ `px-2 py-1 rounded-full border border-emerald-500 ${followed ? 'bg-emerald-500 text-white' : 'text-emerald-500 hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:text-white'}`} />
                 </div>}
-                
-
             </div>
 
             <hr className="my-4" />

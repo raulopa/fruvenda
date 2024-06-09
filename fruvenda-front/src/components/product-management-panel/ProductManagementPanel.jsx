@@ -23,6 +23,7 @@ export default function ProductManagementPanel() {
     const [clickedProduct, setClickedProduct] = useState(null);
     const [addProduct, setAddProduct] = useState(false);
     const [editProduct, setEditProduct] = useState(false);
+    const [phone, setPhone] = useState(false);
 
 
     const [filters, setFilters] = useState(null);
@@ -54,11 +55,27 @@ export default function ProductManagementPanel() {
             if (Array.isArray(response)) {
                 setProducts(response);
                 initFilters();
-            }else{
+            } else {
                 setProducts([]);
             }
         });
     }, [refresh]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 600) {
+                setPhone(true)
+            } else {
+                setPhone(false)
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const formateoDivisa = (value) => {
         return value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
@@ -107,7 +124,7 @@ export default function ProductManagementPanel() {
 
     const startContent = (
         <div className="flex font-outfit-semibold p-2 text-aureus-l">
-            <p className="mr-10">PRODUCTOS</p>
+            <p className="mr-4 lg:md:mr-10">PRODUCTOS</p>
             <Button icon="pi pi-plus" className="mr-2 bg-gradient-to-r from-emerald-600 to-green-500 text-white" onClick={() => { setVisibleDialog(true); setAddProduct(true); }} />
             <Button icon="pi pi-trash" severity="danger" onClick={confirmDelete} disabled={selectedProducts.length === 0} className="mr-2 bg-red-500 text-white" />
         </div>
@@ -115,7 +132,7 @@ export default function ProductManagementPanel() {
 
     const endContent = (
         <div>
-            <div className="p-inputgroup flex-1">
+            <div className="p-inputgroup flex">
                 <InputText placeholder="Buscar producto..." value={globalFilterValue} onChange={onGlobalFilterChange} className="h-10 p-2" />
                 <Button icon="pi pi-search" className="flex justify-center bg-gradient-to-r from-emerald-600 to-green-500 text-white" />
             </div>
@@ -123,7 +140,7 @@ export default function ProductManagementPanel() {
     );
 
     const restartDialog = () => {
-        setVisibleDialog(false); setClickedProduct(null) ; setAddProduct(false) ;  setEditProduct(false)
+        setVisibleDialog(false); setClickedProduct(null); setAddProduct(false); setEditProduct(false)
     }
 
 
@@ -132,19 +149,19 @@ export default function ProductManagementPanel() {
             <Toast ref={toast} position="bottom-right" />
             <Dialog
                 header=""
-                style={{ width: '50%', height: '70%' }}
+                style={{ width: phone ? '100%' : '50vw', height: phone ? '100%' : '50%' }}
                 visible={visibleDialog}
-                maximizable 
+                maximizable
                 modal
                 onHide={restartDialog}
             >
                 {
-                    clickedProduct != null && !editProduct && 
+                    clickedProduct != null && !editProduct &&
                     <ProductDialogContent product={clickedProduct} restartDialog={restartDialog} editProduct={setEditProduct} setRefresh={setRefresh} toast={toast} />
                 }
                 {
                     addProduct &&
-                    <AddProductDialogContent product={clickedProduct} restartDialog={restartDialog}  setRefresh={setRefresh} toast={toast} />
+                    <AddProductDialogContent product={clickedProduct} restartDialog={restartDialog} setRefresh={setRefresh} toast={toast} />
                 }
 
                 {
@@ -152,21 +169,33 @@ export default function ProductManagementPanel() {
                     <AddProductDialogContent product={clickedProduct} restartDialog={restartDialog} setRefresh={setRefresh} toast={toast} />
                 }
             </Dialog>
-            <div className="flex items-center">
-            <h1 className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Gestión de Productos</h1>
+            <div className="flex items-center mt-16 lg:md:mt-0">
+                <h1 className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Gestión de Productos</h1>
 
             </div>
-            <div className="mt-6">
+            <div className="mt-8">
                 <DataTable filters={filters} globalFilterFields={['nombre', 'descripcion', 'stock', 'precio']} removableSort header={<Toolbar start={startContent} end={endContent} />} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} selectionMode="multiple" selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)} value={products}>
                     <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                     <Column header="Imagen" body={imageBodyTemplate}></Column>
-                    <Column sortable field="nombre" header="Nombre"></Column>
-                    <Column field="descripcion" header="Descripción" body={(product)=> product.descripcion != null && product.descripcion.length > 20 ? product.descripcion.slice(0,20) + '...' : product.descripcion}></Column>
-                    <Column sortable field="precio" header="Precio" body={priceBodyTemplate}></Column>
-                    <Column sortable field="stock" header="Stock" body={stockBodyTemplate}></Column>
-                    <Column sortable field="ud_medida" header="Medida" body={(product) => product.ud_medida == 'precio_kilo' ? 'kilogramos' : product.ud_medida }></Column>
-                    <Column sortable field="visible" header="Visible" body={visibleBodyTemplate}></Column>
-                    <Column field="Ver" body={seeBodyTemplate} />
+                    {!phone &&
+                        <Column sortable field="nombre" header="Nombre"></Column>
+                    }
+                    {!phone &&
+                        <Column field="descripcion" header="Descripción" body={(product) => product.descripcion != null && product.descripcion.length > 20 ? product.descripcion.slice(0, 20) + '...' : product.descripcion}></Column>
+                    }
+                    {!phone &&
+                        <Column sortable field="precio" header="Precio" body={priceBodyTemplate}></Column>
+                    }
+                    {!phone &&
+                        <Column sortable field="stock" header="Stock" body={stockBodyTemplate}></Column>
+                    }
+                    {!phone &&
+                        <Column sortable field="ud_medida" header="Medida" body={(product) => product.ud_medida == 'precio_kilo' ? 'kilogramos' : product.ud_medida}></Column>
+                    }
+                    {!phone &&
+                        <Column sortable field="visible" header="Visible" body={visibleBodyTemplate}></Column>
+                    }
+                    <Column field="Ver" header="Ver" body={seeBodyTemplate} />
                 </DataTable>
             </div>
             <ConfirmDialog

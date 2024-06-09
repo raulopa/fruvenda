@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { Landing, Login, Signup, Dashboard, SignupCommerce, ProductManagement, Logout, Profile, Cart, AvailableMarkets, ProductDetail, MarketPage, SearchResult } from './pages';
+import { Landing, Login, Signup, Dashboard, SignupCommerce, ProductManagement, Logout, Profile, Cart, AvailableMarkets, ProductDetail, MarketPage, SearchResult, OrderManagement, NotFound } from './pages';
 import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
 
 
@@ -30,7 +30,10 @@ function App() {
             <Route path='/markets' element={<AvailableMarkets />}></Route>
             <Route path='/markets/:slug' element={<MarketPage />}></Route>
             <Route path="/product/:product" element={<ProductDetail />}></Route>
-            <Route path="/busqueda/:busqueda" element={<SearchResult />}></Route>
+            <Route path="/search/:busqueda" element={<SearchResult />}></Route>
+            <Route path="/order-management" element={<OrderManagement />}></Route>
+            <Route path="/notFound" element={<NotFound />}></Route>
+            <Route path="*" element={<NotFound />}></Route>
           </Routes>
         </main>
       </BrowserRouter>

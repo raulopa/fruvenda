@@ -27,6 +27,7 @@ class CommerceRegisterRequest extends FormRequest
             'nombre' => 'required|string|min:4',
             'telefono' => 'required|string|min:9',
             'email' => 'required|email',
+            'slug' => 'required|unique:comercios'
         ];
     }
 

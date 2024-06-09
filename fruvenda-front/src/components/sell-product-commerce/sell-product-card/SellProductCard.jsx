@@ -42,7 +42,10 @@ export default function SellProductCard({ product }) {
 
         if (added.status) {
             setCantidad(0);
-            updateCartLength(added.data.content.length); // Aquí usamos la función personalizada
+            updateCartLength(added.data.content.length); 
+            
+        }else{
+            
         }
     };
 

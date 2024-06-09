@@ -2,18 +2,33 @@ import { useEffect, useState } from "react";
 import useCustomerService from "services/customer-service/useCustomerService";
 import { TabView, TabPanel } from 'primereact/tabview';
 import { ReviewsProfilePanel } from "components";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function ProfileCustomer() {
+    let navigation = useNavigate();
+    const { slug } = useParams()
     const [customer, setCustomer] = useState(null);
-    const { getCustomer } = useCustomerService();
+    const { getCustomer, getCustomerById } = useCustomerService();
 
     useEffect(() => {
-        getCustomer().then((response) => {
-            if (response.status) {
-                console.log(response.cliente)
-                setCustomer(response.cliente);
-            }
-        });
+        if(slug == null){
+            getCustomer().then((response) => {
+                if (response.status) {
+                    setCustomer(response.cliente);
+                }
+            });
+        }else{
+            getCustomerById(slug).then((response) => {
+                if (response.status) {
+                    setCustomer(response.cliente);
+                }else{
+                    navigation('/notFound', {
+                        replace: true
+                    });
+                }
+            });
+        }
+        
         
     }, []);
 
@@ -28,19 +43,19 @@ export default function ProfileCustomer() {
 
     return (
         <div className="p-4 h-full flex flex-col">
-            <div className="h-64 flex items-center">
+            <div className="h-64 flex items-center mt-16">
                 <div className="h-full mr-10">
-                <div className="h-64 relative w-64">
+                <div className="lg:md:h-64 relative lg:md:w-64 h-28 flex items-center w-28">
                     {customer != null && customer.image != null ? (
-                        <img src={customer.image} alt="Customer profile" className="h-full w-64 aspect-square rounded-full" />
+                        <img src={customer.image} alt="Commerce profile" className="mt-4 lg:md:h-full w-28 lg:md:w-64 aspect-square rounded-full" />
                     ) : (
-                        <div className="h-full w-full bg-gray-200 animate-pulse rounded-full"></div>
+                        <div className="h-28 lg:md:h-full w-28 lg:md:w-64 bg-gray-200 animate-pulse rounded-full"></div>
                     )}
                 </div>
                 </div>
                 <div>
                     {customer ? (
-                        <h1 className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-xl lg:text-aureus-2xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">
+                        <h1 className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-l lg:text-aureus-2xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">
                             {customer.nombre} {customer.apellidos}
                         </h1>
                     ) : (

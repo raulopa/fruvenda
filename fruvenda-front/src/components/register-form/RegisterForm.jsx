@@ -1,92 +1,64 @@
-import { React, useState } from "react";
+import React, { useRef, useState } from "react";
 import InputForm from "components/input-form/InputForm";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthService from "services/auth-service/UseAuthService";
+import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
 export default function RegisterForm() {
-
-    let navigation = useNavigate()
+    let navigation = useNavigate();
+    let toast = useRef();
 
     const { registrarCliente } = useAuthService();
 
     const [formValues, setFormValues] = useState({
-        nombre: { value: "", required: false, error: '' },
-        apellidos: { value: "", required: false, error: '' },
-        email: { value: "", required: false, error: '' },
-        telefono: { value: "", required: false, error: '' },
-        password: { value: "", required: false, error: '' },
-        password_confirmation: { value: "", required: false , error: ''}
+        nombre: { value: "", required: true, error: '' },
+        apellidos: { value: "", required: true, error: '' },
+        email: { value: "", required: true, error: '' },
+        telefono: { value: "", required: true, error: '' },
+        password: { value: "", required: true, error: '' },
+        password_confirmation: { value: "", required: true, error: '' }
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({
             ...formValues,
-            [name]: { value, required: formValues[name].required }
+            [name]: { ...formValues[name], value } // Agregamos el spread operator para mantener las propiedades
         });
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e.target);
         let requeridos = Object.keys(formValues).filter(name => formValues[name].required);
-        const norellenados = requeridos.filter(fieldName => !formValues[fieldName].value.trim());
+        const norellenados = requeridos.filter(fieldName => formValues[fieldName].value === '');
         if (norellenados.length > 0) {
-            alert('Los siguientes campos son requeridos: ' + norellenados);
+            toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: `Los siguientes campos son requeridos: ${norellenados.join(', ')}` });
             return;
         }
         let validatePassword = validarPassword(formValues.password);
         if (!validatePassword.state) {
-            setFormValues(prevState => ({
-                ...prevState,
-                password: {
-                    ...prevState.password,
-                    error: validatePassword.message
-                },
-                password_confirmation: {
-                    ...prevState.password_confirmation,
-                    error: validatePassword.message
-                }
-            }));
-            return
+            toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: validatePassword.message });
+            return;
         }
 
-        if (formValues.password.value !== formValues["password_confirmation"].value) {
-            setFormValues(prevState => ({
-                ...prevState,
-                password: {
-                    ...prevState.password,
-                    error: 'Las contraseñas no coinciden'
-                },
-            }));
-            return
+        if (formValues.password.value !== formValues.password_confirmation.value) {
+            toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: 'Las contraseñas no coinciden' });
+            return;
         }
 
         let registro = await registrarCliente(formValues);
         if (registro.status) {
-            navigation('/dashboard', {
-                replace: true
-            })
+            navigation('/dashboard', { replace: true });
             e.target.reset();
         } else {
-            
-            for (const fieldName in registro.errors) {
-                
-                if (fieldName in formValues) {
-                    setFormValues(prevState => ({
-                        ...prevState,
-                        [fieldName]: {
-                            ...prevState[fieldName],
-                            error: registro.errors[fieldName][0]
-                        }
-                    }));
-                }
+            if (registro.message.includes('The email has already been taken')) {
+                toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: 'El email ya está en uso' });
+            } else {
+                toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: registro.message });
             }
-        };
-
-
-
-    }
+        }
+    };
 
     function validarPassword(password) {
         const expresiones = {
@@ -119,33 +91,27 @@ export default function RegisterForm() {
     }
 
     return (
-        <div className=" w-full md:6/12 lg:w-5/12 p-10 mt-2 outline outline-1 outline-gray-200 dark:outline-slate-600 m-auto shadow-xl rounded-2xl flex items-center justify-center transition-all">
+        <div className="w-full md:6/12 lg:w-5/12 p-10 mt-20 outline outline-1 outline-gray-200 dark:outline-slate-600 m-auto shadow-xl rounded-2xl flex items-center justify-center transition-all">
             <div className="w-full">
+                <Toast ref={toast} position="bottom-right" />
                 <h1 className="font-outfit-semibold  p-2 text-center text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 bg-clip-text font-bold text-4xl text-transparent">¡Registrate gratis!</h1>
-                <form className="text-center dark:text-white w-6/12 mx-auto" onSubmit={handleSubmit}>
+                <form className="text-center dark:text-white w-10/12 lg:md:6/12 mx-auto" onSubmit={handleSubmit}>
                     <p className="font-outfit-semibold text-aureus-l mt-4">Sobre ti</p>
-                    <InputForm type={'text'} placeholder={'Nombre...'} name={'nombre'} onChange={handleChange} required={formValues['nombre'].required} externalError={formValues['nombre'].error != '' ? formValues['nombre'].error : ''} />
-                    <br />
-                    <InputForm type={'text'} placeholder={'Apellidos...'} name={'apellidos'} onChange={handleChange} required={formValues['apellidos'].required} externalError={formValues['apellidos'].error != '' ? formValues['apellidos'].error : ''} />
-                    <br />
-                    <InputForm type={'email'} placeholder={'Email...'} name={'email'} onChange={handleChange} required={formValues['email'].required} externalError={formValues['email'].error != '' ? formValues['email'].error : '' } />
-                    <br />
-                    <InputForm type={'text'} placeholder={'Telefono...'} name={'telefono'} onChange={handleChange} required={formValues['telefono'].required} externalError={formValues['telefono'].error != '' ? formValues['telefono'].error : '' } />
-                    <br />
-                    <br />
+                    <InputText name="nombre" invalid={formValues['nombre'].required} onChange={handleChange} placeholder={'Nombre...'} className=" my-2 border border-gray-300 p-2 w-full" />
+                    <InputText name="apellidos" placeholder={'Apellidos...'} invalid={formValues['apellidos'].required} onChange={handleChange} className=" my-2 border border-gray-300 p-2 w-full" />
+                    <InputText keyfilter='email' name="email" invalid={formValues['email'].required} onChange={handleChange} placeholder={'Email...'} className="my-2 border border-gray-300 p-2 w-full" />
+                    <InputText name="telefono" invalid={formValues['telefono'].required} onChange={handleChange} placeholder={'Teléfono...'} className=" my-2 border border-gray-300 p-2 w-full" />
                     <p className="font-outfit-semibold dark:text-white text-aureus-l">Contraseña</p>
-                    <InputForm type={'password'} placeholder={'Contraseña...'} name={'password'} onChange={handleChange} required={formValues['password'].required} externalError={formValues['password'].error != '' ? formValues['password'].error : '' } />
-                    <br />
-                    <InputForm type={'password'} placeholder={'Confirmar contraseña...'} name={'password_confirmation'} onChange={handleChange} required={formValues['password_confirmation'].required} externalError={formValues['password_confirmation'].error != '' ? formValues['password_confirmation'].error : '' } />
-                    <br />
-                    <br />
+                    <InputText type="password" name="password" placeholder={'Contraseña...'} invalid={formValues['password'].required} onChange={handleChange} className="border border-gray-300 p-2 w-full" />
+                    <InputText type="password" name='password_confirmation' placeholder={'Confirmar contraseña...'} invalid={formValues['password_confirmation'].required} onChange={handleChange} className="border my-2  border-gray-300 p-2 w-full" />
                     <input className="bg-gradient-to-r dark:text-slate-800 to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 text-white w-full py-3 rounded-lg hover:animate-gradient-x cursor-pointer" type="submit" value="Crear cuenta" />
                 </form>
                 <div>
                     <Link to={'/login'} className=" ">
                         <p className="font-outfit  text-center lg:text-right p-2 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 bg-clip-text font-bold text-4xl text-transparent">
                             ¿Ya tienes cuenta? ¡Inicia sesión!
-                        </p></Link>
+                        </p>
+                    </Link>
                 </div>
             </div>
         </div>

@@ -131,7 +131,8 @@ class CustomerController extends Controller
         if ($cliente) {
             return [
                 'nombreCompleto' => $cliente->nombre . ' ' . $cliente->apellidos,
-                'imagen' => self::getProfileImageUrl($user->id)
+                'imagen' => self::getProfileImageUrl($user->id),
+                'id' => $cliente->id
             ];
         } else {
             return 'Cliente no encontrado';
@@ -166,6 +167,34 @@ class CustomerController extends Controller
             ], $error->getCode() == 0 ? 400 : $error->getCode());
         }
     }
+    public function getClienteById($id)
+    {
+        try {
+            $cliente =json_decode(json_encode(Customer::findCustomerById($id)), true);
+
+            if ($cliente) {
+                return response()->json([
+                    'status' => true,
+                    'cliente' => $cliente,
+                    'image' => self::getProfileImageUrl(User::where('email', $cliente['email'])->first()->id)
+                ], 200);
+            } else {
+                throw new ActionNotAuthorized();
+            }
+        } catch (ActionNotAuthorized $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ],401);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], 400);
+        }
+    }
+
+
 
     public function setComercioSeguido($idComercio)
     {
@@ -287,6 +316,7 @@ class CustomerController extends Controller
                         'id' => $seguido->id,
                         'cliente' => $seguido->id_cliente,
                         'id_comercio' => $seguido->id_comercio,
+                        'slug' => $comercio['slug'],
                         'comercio_nombre' => $comercio['nombreCompleto'],
                         'comercio_foto' => $comercio['imagen']
                     ];

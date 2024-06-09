@@ -13,6 +13,7 @@ use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Pusher\Pusher;
 
@@ -47,7 +48,13 @@ class OrderController extends Controller
                 }
                 $orders = [];
                 foreach ($groupedProducts as $commerceId => $group) {
-                    $orders[] = Order::createOrder($commerceId, $customer->id, $group);
+                    $order = Order::createOrder($commerceId, $customer->id, $group, $customer->nombre);
+                    $orders[] = $order;
+
+                    // Restar la cantidad comprada del stock de cada producto usando el DB Builder
+                    foreach ($group as $item) {
+                        Product::subtractStock($item);
+                    }
                 }
 
                 Cart::setInvisibleCart($cartId);
@@ -86,14 +93,64 @@ class OrderController extends Controller
         }
     }
 
-    public function cancelPedido($idOrder){
+    public function takePedido(Request $request)
+    {
+    try {
+        $user = Auth::user();
+        $comercio = Commerce::findCommerce($user->email);
+        if ($comercio) {
+            $order = Order::createOrder($comercio->id, null, $request->lineas, $request->nombreCliente);
+
+            foreach ($request->lineas as $item) {
+                Product::subtractStock($item);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Pedido realizado correctamente',
+                'data' => $order
+            ]);
+        } else {
+            throw new ActionNotAuthorized();
+        }
+    } catch (ActionNotAuthorized $error) {
+        return response()->json([
+            'status' => false,
+            'message' => $error->getMessage()
+        ], $error->getCode());
+    } catch (Error $error) {
+        return response()->json([
+            'status' => false,
+            'message' => $error->getMessage()
+        ], $error->getCode());
+    }
+    }
+
+    public function cancelPedido($idOrder)
+    {
         try {
             $user = Auth::user();
             $cliente = Customer::findCustomer($user->email);
-            $order = Order::findOrderByCustomer($idOrder,  $cliente->id);
+            $order = Order::findOrderByCustomer($idOrder, $cliente->id);
 
             if ($order) {
                 Order::changeStatus($order->id, 'cancelado');
+                $orderLines = DB::table('lineas_pedido')
+                    ->where('id_pedido', $idOrder)
+                    ->get();
+
+                foreach ($orderLines as $orderLine) {
+                    $product = DB::table('productos')
+                        ->where('id', $orderLine->id_producto)
+                        ->first();
+                    if ($product) {
+                        $newStock = $product->stock + $orderLine->cantidad;
+                        DB::table('productos')
+                            ->where('id', $product->id)
+                            ->update(['stock' => $newStock]);
+                    }
+                }
+
                 $pusher = new Pusher(
                     env('PUSHER_APP_KEY'),
                     env('PUSHER_APP_SECRET'),
@@ -154,7 +211,36 @@ class OrderController extends Controller
         }
     }
 
-    public function getPedidosCliente(){
+    public function getPedidos()
+    {
+        try {
+            $user = Auth::user();
+            $comercio = Commerce::findCommerce($user->email);
+
+            if ($comercio) {
+                $pedidos = Order::getOrdersByCommerce($comercio->id);
+                return response()->json([
+                    'status' => true,
+                    'pedidos' => $pedidos
+                ], 200);
+            } else {
+                throw new ActionNotAuthorized('Usuario no autorizado', 403);
+            }
+        } catch (ActionNotAuthorized $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], $error->getCode() ?: 403);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getPedidosPendientesCliente()
+    {
         try {
             $user = Auth::user();
             $cliente = Customer::findCustomer($user->email);
@@ -180,14 +266,42 @@ class OrderController extends Controller
         }
     }
 
-    public function changeEstado($idOrder, $estado){
+    public function getPedidosCliente()
+    {
+        try {
+            $user = Auth::user();
+            $cliente = Customer::findCustomer($user->email);
+            if ($cliente) {
+                $pedidos = Order::getOrdersByCustomer($cliente->id);
+                return response()->json([
+                    'status' => true,
+                    'pedidos' => $pedidos
+                ], 200);
+            } else {
+                throw new ActionNotAuthorized('Usuario no autorizado', 403);
+            }
+        } catch (ActionNotAuthorized $error) {
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], $error->getCode() ?: 403); // Default to 403 if no code is set
+        } catch (\Exception $error) { // Catch all other exceptions
+            return response()->json([
+                'status' => false,
+                'message' => $error->getMessage()
+            ], 500); // Default to 500 for general errors
+        }
+    }
+
+    public function changeEstado($idOrder, $estado)
+    {
         try {
             $user = Auth::user();
             $comercio = Commerce::findCommerce($user->email);
             $order = Order::findOrder($idOrder, $comercio->id);
 
             if ($comercio && $order) {
-                Order::changeStatus($order->id ,$estado);
+                Order::changeStatus($order->id, $estado);
                 $order = Order::findOrder($idOrder, $comercio->id);
 
                 $pusher = new Pusher(

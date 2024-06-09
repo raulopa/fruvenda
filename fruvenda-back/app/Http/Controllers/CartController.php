@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Customer;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -83,6 +84,7 @@ class CartController extends Controller
             }
             $cartId = Crypt::decryptString($cartToken);
             $cartLine = $request->only(['id', 'cantidad']);
+
             $cartContent = Cart::addProductToCart($cartId,$cartLine);
 
 

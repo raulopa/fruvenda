@@ -16,3 +16,5 @@ export {default as AvailableMarkets} from './available-markets/AvailableMarkets'
 export {default as ProductDetail} from './product-detail/ProductDetail';
 export {default as MarketPage} from './market-page/MarketPage';
 export {default as SearchResult} from './search-result/SearchResult';
+export {default as OrderManagement} from './order-management/OrderManagement';
+export {default as NotFound} from './not-found/NotFound'

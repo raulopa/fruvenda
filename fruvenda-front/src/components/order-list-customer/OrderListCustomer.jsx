@@ -15,12 +15,13 @@ export default function OrderListCustomer() {
     const overlayRefs = useRef({});
     const [visibleDialog, setVisibleDialog] = useState(false);
     const [orders, setOrders] = useState([]);
-    const { getOrdersByCustomer, cancelOrder } = useOrderService();
+    const { getPendingOrdersByCustomer, cancelOrder } = useOrderService();
     const [detailedOrder, setDetailedOrder] = useState();
     const [refresh, setRefresh] = useState(false);
+    const [phone, setPhone] = useState(false);
 
     useEffect(() => {
-        getOrdersByCustomer().then((response) => {
+        getPendingOrdersByCustomer().then((response) => {
             if (response.status) {
                 setOrders(response.data);
             }
@@ -37,7 +38,7 @@ export default function OrderListCustomer() {
             const hasMatchingOrder = orders.some(order => order.id_cliente == php); 
             orders.map((order)=> console.log(order.id_cliente +'-'+php))
             if (hasMatchingOrder) {
-                getOrdersByCustomer().then((response) => {
+                getPendingOrdersByCustomer().then((response) => {
                     if (response.status) {
                         setOrders(response.data);
                     }
@@ -51,6 +52,23 @@ export default function OrderListCustomer() {
         };
     }, [refresh]);
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 600) {
+               setPhone(true)
+            } else {
+                setPhone(false)
+            }
+        };
+        
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     const pusher = new Pusher('8caaee086e75a8c793aa', {
         cluster: 'eu',
         encrypted: false
@@ -62,7 +80,7 @@ export default function OrderListCustomer() {
         const hasMatchingOrder = orders.some(order => order.id_cliente == php); 
         orders.map((order)=> console.log(order.id_cliente +'-'+php))
         if (hasMatchingOrder) {
-            getOrdersByCustomer().then((response) => {
+            getPendingOrdersByCustomer().then((response) => {
                 if (response.status) {
                     setOrders(response.data);
                 }
@@ -138,14 +156,14 @@ export default function OrderListCustomer() {
                 <Button onClick={()=> setRefresh(!refresh)} className="w-10 h-10 bg-gradient-to-r to-green-500 from-emerald-600 text-white hover:animate-gradient-x rounded-full"  icon="pi pi-refresh"></Button>
             </div>
             <Toast ref={toast} position="bottom-right" />
-            <Dialog header={'Detalles de pedido'} visible={visibleDialog} style={{ width: '50vw' }} onHide={() => { setVisibleDialog(false); setDetailedOrder(null) }}>
+            <Dialog header={'Detalles de pedido'} visible={visibleDialog} style={{ width: phone ? '100vw' : '50vw' }} onHide={() => { setVisibleDialog(false); setDetailedOrder(null) }}>
                 {detailedOrder != null &&
                     <OrderDialogContent order={detailedOrder} toast={toast}></OrderDialogContent>
                 }
             </Dialog>
             <DataTable removableSort className="text-aureus-m h-full w-full" value={orders} tableStyle={{ minWidth: '20rem' }}>
                 <Column field="id" header="Id" ></Column>
-                <Column sortable field="fecha_hora" header="Fecha"></Column>
+                {!phone && <Column sortable field="fecha_hora" header="Fecha"></Column>}
                 <Column sortable field="estado" header="Estado" body={estadoTemplate}></Column>
                 <Column body={detailsTemplate}></Column>
             </DataTable>

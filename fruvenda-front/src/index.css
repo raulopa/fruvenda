@@ -75,6 +75,16 @@
   .h-11\/12{
     height: 91.6%;
   }
+  .h-div-gradient{
+    height: 55rem;
+  }
+  .w-carousel-full{
+    width: 98%;
+  }
+
+  .shadow-inset-white{
+    box-shadow: inset 0px 0px 30px 20px white;
+  }
 
 }
 

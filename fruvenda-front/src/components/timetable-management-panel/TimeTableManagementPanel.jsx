@@ -2,45 +2,45 @@ import useMarketService from "services/market-service/useMarketService";
 import TimetableRow from "./timetable-row/TimetableRow";
 import { useState, useEffect } from 'react';
 import { Button } from "primereact/button";
+import useTimetableService from "services/timetable-service/useTimetableService";
 
-export default function TimetableManagementPanel({ restartDialog, toast }) {
+export default function TimetableManagementPanel({ toast }) {
     const [marketsSuscribed, setMarketsSuscribed] = useState([]);
     const { searchSuscribedMarket } = useMarketService();
     const [timetables, setTimetables] = useState([]);
+    const { getTimetables } = useTimetableService();
 
     useEffect(() => {
         searchSuscribedMarket().then((suscribed) => {
             suscribed.markets = [{ codigo_postal: null, direccion: null, id: null, nombre: "Tienda" }, ...suscribed.markets];
             setMarketsSuscribed(suscribed.markets);
-            setTimetables(suscribed.markets.map((ms) => {
-                return { 'entidad': ms.nombre, 'horario': [] }
+        });
+        getTimetables().then((response) => {
+            if (response.status) {
+                console.log(response.timetables);
+                setTimetables(response.timetables);
             }
-            ));
         });
     }, []);
-
-    const handleSubmit = () => {
-        console.log(timetables);
-    }
 
     return (
         <div className="flex flex-col justify-between w-full h-full">
             <div>
-                {marketsSuscribed.map((e, i) => (
-                    <TimetableRow
-                        key={i}
-                        entity={e}
-                        setTimetable={setTimetables}
-                    />
-                ))}
-            </div>
+                {marketsSuscribed.length > 0 &&
+                    marketsSuscribed.map((e, i) => {
+                        return (
+                            <TimetableRow
+                                key={i}
+                                entity={e}
+                                timetable={timetables.find((timetable) => e.id == timetable[0].id_mercado)}
+                                setTimetable={setTimetables}
+                                toast={toast}
+                            />
+                        );
+                    }
 
-            <Button
-                onClick={() => handleSubmit()}
-                label="Guardar"
-                aria-label="Guardar horarios"
-                className="mt-10 flex justify-center w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white h-12 hover:bg-emerald-600"
-            />
+                    )}
+            </div>
         </div>
     );
 }

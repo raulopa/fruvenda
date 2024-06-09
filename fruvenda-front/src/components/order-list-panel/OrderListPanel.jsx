@@ -10,18 +10,18 @@ import OrderDialogContent from "./order-dialog-content/OrderDialogContent";
 import { OverlayPanel } from 'primereact/overlaypanel';
 import Pusher from "pusher-js";
 
-export default function OrderListPanel() {
+export default function OrderListPanel({externalRefresh}) {
     const toast = useRef();
     const [orders, setOrders] = useState([]);
     const [visibleDialog, setVisibleDialog] = useState(false);
-    const { getOrdersByCommerce, changeStatus } = useOrderService();
+    const { getOrdersPendingByCommerce, changeStatus } = useOrderService();
     const [detailedOrder, setDetailedOrder] = useState();
     const overlayRefs = useRef({}); // Store references to multiple OverlayPanels
     const [refresh, setRefresh] = useState(false);
-
+    const [phone, setPhone] = useState(false);
 
     useEffect(() => {
-        getOrdersByCommerce().then((response) => {
+        getOrdersPendingByCommerce().then((response) => {
             if (response.status) {
                 setOrders(response.data);
             }
@@ -34,14 +34,12 @@ export default function OrderListPanel() {
         const channel = pusher.subscribe('pedidos');
 
         channel.bind('nuevo-pedido', (php) => {
-            console.log(php);
-
             const hasOrders = orders.length > 0;
             const hasMatchingOrder = orders.some(order => php.includes(order.id_comercio));
 
             // Si hay órdenes y alguna coincide o si no hay órdenes, ejecutamos fetchOrders
             if (hasOrders && hasMatchingOrder || !hasOrders) {
-                getOrdersByCommerce().then((response) => {
+                getOrdersPendingByCommerce().then((response) => {
                     if (response.status) {
                         setOrders(response.data);
                     }
@@ -54,16 +52,21 @@ export default function OrderListPanel() {
 
         channel2.bind('nuevo-estado', (php) => {
             const hasMatchingOrder = orders.some(order => order.id_cliente == php);
-            orders.map((order) => console.log(order.id_cliente + '-' + php))
             if (hasMatchingOrder) {
-                getOrdersByCommerce().then((response) => {
+                getOrdersPendingByCommerce().then((response) => {
                     if (response.status) {
                         setOrders(response.data);
                     }
                 });
             }
         });
-    }, [refresh]);
+
+        return () => {
+            channel.unbind_all();
+            channel.unsubscribe();
+        };
+        
+    }, [refresh, externalRefresh]);
 
     const pusher = new Pusher('8caaee086e75a8c793aa', {
         cluster: 'eu',
@@ -73,14 +76,12 @@ export default function OrderListPanel() {
     const channel = pusher.subscribe('pedidos');
 
     channel.bind('nuevo-pedido', (php) => {
-        console.log(php);
-
         const hasOrders = orders.length > 0;
         const hasMatchingOrder = orders.some(order => php.includes(order.id_comercio));
 
         // Si hay órdenes y alguna coincide o si no hay órdenes, ejecutamos fetchOrders
         if (hasOrders && hasMatchingOrder || !hasOrders) {
-            getOrdersByCommerce().then((response) => {
+            getOrdersPendingByCommerce().then((response) => {
                 if (response.status) {
                     setOrders(response.data);
                 }
@@ -93,15 +94,30 @@ export default function OrderListPanel() {
 
     channel2.bind('nuevo-estado', (php) => {
         const hasMatchingOrder = orders.some(order => order.id_cliente == php);
-        orders.map((order) => console.log(order.id_cliente + '-' + php))
         if (hasMatchingOrder) {
-            getOrdersByCommerce().then((response) => {
+            getOrdersPendingByCommerce().then((response) => {
                 if (response.status) {
                     setOrders(response.data);
                 }
             });
         }
     });
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 600) {
+                setPhone(true)
+            } else {
+                setPhone(false)
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const getSeverity = (estado) => {
         switch (estado) {
@@ -122,7 +138,6 @@ export default function OrderListPanel() {
         let status = await changeStatus(order.id, estado);
         if (status.status) {
             const updatedOrder = status.data.pedido;
-            console.log(updatedOrder);
             toast.current.show({ severity: 'success', summary: 'Actualizado', detail: status.data.message });
 
             // Update the orders array with the updated order
@@ -184,19 +199,19 @@ export default function OrderListPanel() {
 
             <div className="overflow-y-auto overflow-x-hidden h-full">
             <Toast ref={toast} position="bottom-right" />
-                <Dialog header={'Detalles de pedido'} visible={visibleDialog} style={{ width: '50vw' }} onHide={() => { setVisibleDialog(false); setDetailedOrder(null) }}>
+                <Dialog header={'Detalles de pedido'} visible={visibleDialog} style={{ width: phone ? '100vw' : '50vw' , height: '60%'}} onHide={() => { setVisibleDialog(false); setDetailedOrder(null) }}>
                     {detailedOrder != null &&
                         <OrderDialogContent order={detailedOrder} toast={toast}></OrderDialogContent>
                     }
                 </Dialog>
                 <DataTable removableSort className="text-aureus-m h-full" value={orders} tableStyle={{ minWidth: '20rem' }}>
                     <Column field="id" header="Id" ></Column>
-                    <Column sortable field="fecha_hora" header="Fecha"></Column>
+                    {!phone && <Column sortable field="fecha_hora" header="Fecha"></Column>}
                     <Column sortable field="estado" header="Estado" body={estadoTemplate}></Column>
                     <Column body={detailsTemplate}></Column>
                 </DataTable>
             </div>
-
+                   
         </div>
     );
 

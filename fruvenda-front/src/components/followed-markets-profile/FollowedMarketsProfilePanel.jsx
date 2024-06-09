@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import useCustomerService from "services/customer-service/useCustomerService";
 import { DataView } from "primereact/dataview";
 import { Button } from "primereact/button";
+import { useNavigate} from "react-router-dom";
+import ButtonStopFollow from "./button-stop-follow/ButtonStopFollow";
 
 export default function FollowedMarketsProfilePanel({toast}){
+    let navigation = useNavigate();
     const [follows, setFollows] = useState([]);
     const { getFollowed, setFollowCommerce } = useCustomerService();
-    const [hover, setHover] = useState(false);
+   
     const [refresh, setRefresh] = useState(false);
     useEffect(()=> {
         getFollowed().then((response) => {
@@ -17,35 +20,25 @@ export default function FollowedMarketsProfilePanel({toast}){
     }, [refresh]);
 
 
-    const handleFollow = (id)=> {
-        setFollowCommerce(id).then((response)=>{
-            if(response.status){
-                toast.current.show({
-                    severity: 'success',
-                    summary: 'Seguido',
-                    detail: response.seguido ? 'Comercio seguido correctamente' : 'Has dejado de seguir el comercio'
-                });
-                setRefresh(!refresh);
-            }else{
-                toast.current.show({ severity: 'error', summary: 'Error', detail: 'No se ha podido seguir al comercio'});
-            }
-            
-        });
+   
+
+    const goToProfile = (slug) => {
+        navigation(`/profile/${slug}`)
     }
 
     const itemTemplate = (item, key) => (
-        <div key={key} className="flex  flex-col w-full">
-            <div className="flex">
-            <div className="flex items-center w-9/12">
-                <img src={item.comercio_foto} className="w-16 h-16 rounded-full mr-10" />
-                <p className="text-aureus-l">{item.comercio_nombre}</p>
+        <div  key={key} className="flex flex-col w-full ">
+            <div onClick={() => goToProfile(item.slug)} className="flex cursor-pointer hover:bg-gray-100 py-6">
+            <div  className="flex items-center w-9/12">
+                <img src={item.comercio_foto} className="lg:md:w-16 lg:md:h-16 w-10 h-10 rounded-full lg:md:mr-10" />
+                <p className="text-aureus-m lg:md:text-aureus-l lg:md:ml-0 ml-2">{item.comercio_nombre}</p>
             </div>
             <div className="flex items-center ">
-                <Button onClick={()=> handleFollow(item.id_comercio)} icon={hover ? 'pi pi-times':'pi pi-check'} label={hover ? 'Dejar de seguir'  : 'Seguido'} onMouseOver={()=> setHover(true)} onMouseLeave={() => setHover(false)} className={ `px-4 py-2 rounded-full border ${hover ? 'border-red-500 bg-red-500' : 'border-emerald-500 bg-emerald-500'}  text-white`}></Button>
+                <ButtonStopFollow toast={toast} item={item} refresh={refresh} setRefresh={setRefresh} />
             </div>
             </div>
             
-           <hr className="mt-6" />
+           <hr className="" />
         </div>
     );
     
