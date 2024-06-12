@@ -107,7 +107,7 @@ export default function DashboardCommerce() {
             <Toast ref={toast} position="bottom-right" />
             <Dialog
                 header={visibleTimetableDialog ? "Administra tus horarios" : visibleOrderDialog ? 'Toma nota de un pedido' : visibleMarketDialog ? "Administra tus mercados" : visiblePostsDialog ? 'Administre sus posts' : "Cambie sus datos"}
-                style={{ width: phone ? '100%' : '50vw', height: phone ? '100%' : '50%' }}
+                style={{ width: phone ? '100%' : '50vw', height: phone ? '100%' : '70%' }}
                 visible={visibleMarketDialog || visibleTimetableDialog || visibleEdit || visiblePostsDialog || visibleOrderDialog}
                 maximizable
                 modal

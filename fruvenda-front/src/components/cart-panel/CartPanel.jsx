@@ -20,7 +20,6 @@ export default function CartPanel() {
     useEffect(() => {
         getCartContent().then((response) => {
             if (response.status) {
-                console.log(response.data)
                 setProducts(response.data.content);
                 setSubtotal(response.data.subtotal);
             }
@@ -51,7 +50,6 @@ export default function CartPanel() {
         if (ordered.status) {
             navigation('/dashboard');
         } else {
-            console.log(ordered);
             if (ordered.code == '401') {
                 navigation('/login', {
                     state: {error: { severity: 'error', summary: 'Sin autenticar', detail: 'Debes tener una cuenta para continuar' } }

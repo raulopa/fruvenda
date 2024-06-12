@@ -100,7 +100,6 @@ export default function OrderManagementPanelCustomer({ toast }) {
 
         channel.bind('nuevo-estado', (php) => {
             const hasMatchingOrder = orders.some(order => order.id_cliente == php); 
-            orders.map((order)=> console.log(order.id_cliente +'-'+php))
             if (hasMatchingOrder) {
                 getOrdersByCustomer().then((response) => {
                     if (response.status) {
@@ -142,7 +141,6 @@ export default function OrderManagementPanelCustomer({ toast }) {
 
     channel.bind('nuevo-estado', (php) => {
         const hasMatchingOrder = orders.some(order => order.id_cliente == php); 
-        orders.map((order)=> console.log(order.id_cliente +'-'+php))
         if (hasMatchingOrder) {
             getOrdersByCustomer().then((response) => {
                 if (response.status) {
@@ -173,7 +171,6 @@ export default function OrderManagementPanelCustomer({ toast }) {
         let status = await cancelOrder(order.id, estado);
         if (status.status) {
             const updatedOrder = status.data.pedido;
-            console.log(updatedOrder);
             toast.current.show({ severity: 'success', summary: 'Actualizado', detail: status.data.message });
 
             // Update the orders array with the updated order

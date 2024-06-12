@@ -26,7 +26,6 @@ export default function ReviewDialogContent({setVisible, setRefresh, toast}){
             };
             let review = await sendReview(reviewData, slug);
             if(review.status){
-                console.log(review);
                 toast.current.show({ severity: 'success', summary: 'Enviada', detail: 'Reseña enviada correctamente' });
                 setTitulo('');
                 setCuerpo('');

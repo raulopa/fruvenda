@@ -17,7 +17,6 @@ export default function TimetableManagementPanel({ toast }) {
         });
         getTimetables().then((response) => {
             if (response.status) {
-                console.log(response.timetables);
                 setTimetables(response.timetables);
             }
         });

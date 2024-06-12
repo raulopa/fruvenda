@@ -20,7 +20,6 @@ export default function ReviewDashboardPanel({toast}){
         let deleted = await deleteReview(id);
         if(deleted.status){
             setRefresh(!refresh);
-            console.log(deleted)
             toast.current.show({ severity: 'success', summary: 'Eliminado', detail: deleted.message});
         }else{
             toast.current.show({ severity: 'error', summary: 'Error', detail: deleted.message});

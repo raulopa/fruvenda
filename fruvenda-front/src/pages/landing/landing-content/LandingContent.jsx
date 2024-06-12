@@ -76,12 +76,12 @@ export default function LandingContent() {
                 <div className="flex justify-center flex-col items-center mt-10">
                     <p className="text-aureus-l md:text-aureus-l lg:text-aureus-2xl font-outfit-bold text-center">Empieza a comprar con Fruvenda</p>
                     <div className=" flex-col items-center lg:md:flex-row flex justify-center">
-                        <InputText onChange={(e) => setCp(e.target.value)} keyfilter="int" className="p-2 text-aureus-m md:text-aureus-m lg:text-aureus-l rounded-full border border-emerald-500 pl-6" placeholder="Introduce codigo postal..." />
+                        <InputText onChange={(e) => setCp(e.target.value)} keyfilter="int" className="p-2 text-aureus-m lg:md:py-2 md:text-aureus-m lg:text-aureus-l rounded-full border border-emerald-500 pl-6" placeholder="Introduce codigo postal..." />
                         <Button onClick={() => {
                             navigation('/markets', {
                                 state: { message: cp}
                             })
-                        }} className="lg:md:ml-6 lg.md:mt-0 mt-2 rounded-full text-aureus-m lg:md:text-aureus-l px-10 hover:animation-gradient-x bg-gradient-to-r from-emerald-500 to-green-500 text-white" label="Buscar" icon="pi pi-search" />
+                        }} className="lg:md:ml-6 lg:md:mt-0 mt-2 rounded-full lg:md:py-2 text-aureus-m lg:md:text-aureus-l px-10 hover:animation-gradient-x bg-gradient-to-r from-emerald-500 to-green-500 text-white" label="Buscar" icon="pi pi-search" />
                     </div>
                     <hr className="my-14 lg:md:my-28 border-transparent w-full"></hr>
                     <div className="flex flex-col justify-center items-center">

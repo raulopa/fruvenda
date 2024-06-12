@@ -18,8 +18,6 @@ export default function Header() {
         }
 
     }
-    console.log('darkmode: ' + darkMode);
-    console.log('lcoal: ' +localStorage.getItem('darkMode'))
     return (
         <header className="w-full h-24 flex justify-between relative ">
             <div id='header-wrapper' className='w-full h-24 flex justify-between absolute z-20 bg-white transition-all dark:bg-slate-800'>

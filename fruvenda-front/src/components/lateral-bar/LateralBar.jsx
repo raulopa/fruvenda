@@ -12,7 +12,6 @@ export default function LateralBar() {
     const entityType = sessionStorage.getItem('entityType');
 
     const handleNavigation = (keyword) => {
-        console.log('Navigating to:', keyword); // Agregar log para depuración
         switch (keyword) {
             case 'dashboard':
                 navigation('/dashboard');

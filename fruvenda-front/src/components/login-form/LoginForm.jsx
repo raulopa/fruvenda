@@ -3,6 +3,7 @@ import InputForm from "components/input-form/InputForm";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuthService from "services/auth-service/UseAuthService";
 import { Toast } from "primereact/toast";
+import { InputText } from "primereact/inputtext";
 
 export default function LoginForm() {
 
@@ -46,7 +47,7 @@ export default function LoginForm() {
             });
             e.target.reset();
         } else {
-            setError(login.message);
+            toast.current.show({ severity: 'error', summary: 'Incorrecto', detail: login.message});
         };
     }
 
@@ -57,9 +58,10 @@ export default function LoginForm() {
                 <h1 className="font-outfit-semibold  p-2 text-center text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 bg-clip-text font-bold text-4xl text-transparent">Iniciar sesión</h1>
                 <form className="text-center dark:text-white  w-10/12 lg:md:6/12 mx-auto" onSubmit={handleSubmit}>
                     <p className="text-red-400 font-outfit-bold">{error}</p>
-                    <InputForm type={'email'} placeholder={'Email...'} name={'email'} onChange={handleChange} required={formValues['email'].required} externalError={error != '' ? true : false} />
+                    <InputText onChange={handleChange}  name="email" placeholder={'Email...'}  invalid={formValues['email'].required} className=" my-2 border border-gray-300 p-2 w-full" />
                     <br />
-                    <InputForm type={'password'} placeholder={'Contraseña...'} name={'password'} onChange={handleChange} required={formValues['password'].required} externalError={error != '' ? true : false} />
+                    <InputText type="password" name='password' placeholder={'Contraseña...'} invalid={formValues['password'].required} onChange={handleChange} className="border my-2  border-gray-300 p-2 w-full" />
+                    
                     <br />
                     <br />
                     <input className="bg-gradient-to-r dark:text-slate-800 to-green-500 from-emerald-600 dark:from-green-300 dark:to-emerald-400 text-white w-full py-3 rounded-lg hover:animate-gradient-x cursor-pointer" type="submit" value="Acceder" />

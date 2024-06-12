@@ -12,7 +12,6 @@ export default function CurrentOrderDialog({ lineOrders, setLineOrders }) {
     }
 
     const itemTemplate = (lineOrder) => {
-        console.log(lineOrder.cantidad);
         return (
             <div>
                 <div className="w-full h-24 flex my-5">

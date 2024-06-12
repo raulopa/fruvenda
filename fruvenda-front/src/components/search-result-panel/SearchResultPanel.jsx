@@ -17,7 +17,6 @@ export default function SearchResultPanel() {
     useEffect(() => {
         searchEntity(search).then((response) => {
             if (response.status) {
-                console.log(response);
                 setCommerces(response.commerces)
                 setMarkets(response.markets)
                 setThrow404(true);

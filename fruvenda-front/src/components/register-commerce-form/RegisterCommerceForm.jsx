@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuthService from "services/auth-service/UseAuthService";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
+import { Password } from "primereact/password";
 
 export default function RegisterCommerceForm() {
 
@@ -114,7 +115,26 @@ export default function RegisterCommerceForm() {
                     <InputText name="telefono" invalid={formValues['telefono'].required} onChange={handleChange} placeholder={'Teléfono...'} className=" my-2 border border-gray-300 p-2 w-full" />
                     
                     <p className="font-outfit-semibold dark:text-white text-aureus-l">Contraseña</p>
-                    <InputText type="password" name="password" placeholder={'Contraseña...'} invalid={formValues['password'].required} onChange={handleChange} className="border border-gray-300 p-2 w-full" />
+                    <style jsx='true'>
+                        {
+                            `
+                            .password-field-fruvenda{
+                                width:105.2%;
+                            
+                            }
+                            .password-field-fruvenda input{
+                                    margin-left: 30px;
+                                    width: 100%;
+                                    height: 100%;
+                                    outline: none !important;
+                                    border: 1px solid rgb(209 213 219);
+                                    padding: 0.5rem;
+                                    font-family: outfit;
+                            }
+                                    `
+                        }
+                    </style>
+                    <Password  value={formValues['password'].value} name="password" placeholder={'Contraseña...'} invalid={formValues['password'].required} onChange={handleChange} className="password-field-fruvenda -ml-7" promptLabel="Elige tu contraseña" weakLabel="Demasiado simple" mediumLabel="Contraseña media" strongLabel="Contraseña compleja" toggleMask />
                     <InputText type="password" name='password_confirmation' placeholder={'Confirmar contraseña...'} invalid={formValues['password_confirmation'].required} onChange={handleChange} className="border my-2  border-gray-300 p-2 w-full" />
                     
                     <p className="font-outfit-semibold dark:text-white text-aureus-l">Nombre de usuario</p>
