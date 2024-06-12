@@ -1,5 +1,5 @@
 Fruvenda
-<img src="https://fruvenda.es/static/media/fruvenda-banner-back-png.1d7fda7974e348f78814.png" alt="Fruvenda Logo" width="200"/>
+<img src="https://fruvenda.es/static/media/fruvenda-banner-back-png.1d7fda7974e348f78814.png" alt="Fruvenda Logo" width="1000"/>
 
 Fruvenda es una solución digital innovadora que conecta a los comercios locales y mercados de abasto con el mundo online, ofreciendo una plataforma gratuita y fácil de usar para la exposición y gestión de productos. Diseñada para optimizar la eficiencia y la satisfacción del cliente, Fruvenda transforma la manera en que los negocios locales manejan sus pedidos y servicios.
 🚀 Descripción del Proyecto
