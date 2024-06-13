@@ -18,7 +18,7 @@ const Header = ({ nombre, foto_perfil, slug}) => {
                 setPhone(false)
             }
         };
-
+        handleResize();
         window.addEventListener('resize', handleResize);
 
         return () => {
@@ -36,7 +36,7 @@ const Header = ({ nombre, foto_perfil, slug}) => {
                 <Button
                     onClick={() => handleNavigation(slug)}
                     icon="pi pi-user"
-                    label={over || phone ? 'Ir al perfil' : ''}
+                    label={over && !phone ? 'Ir al perfil' : ''}
                     onMouseOver={() => setOver(true)}
                     onMouseOut={() => setOver(false)} // Cambiado de onBlur a onMouseOut para manejar el evento de salida del mouse
                     className={` bg-gradient-to-r to-green-500 rounded-full hover:animation-gradient-x text-white ${over ? 'lg:md:w-36 w-8 lg:md:pl-4' : 'w-8 lg:md:w-12'} h-8 lg:md:h-12 from-emerald-500 transition-all`}

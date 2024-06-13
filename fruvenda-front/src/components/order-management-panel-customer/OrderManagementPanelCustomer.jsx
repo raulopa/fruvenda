@@ -201,7 +201,7 @@ export default function OrderManagementPanelCustomer({ toast }) {
 
     const estadoTemplate = (order) => (
         <div>
-            <Button onClick={(e) => overlayRefs.current[order.id].toggle(e)}>
+            <Button onClick={(e) => order.estado != 'cancelado' || order.estado != 'entregado' && overlayRefs.current[order.id].toggle(e)}>
                 <Tag className={`${order.estado == 'cancelado' ? 'bg-black' : ''} capitalize`} severity={getSeverity(order.estado)} value={order.estado}></Tag>
             </Button>
             <OverlayPanel ref={(el) => (overlayRefs.current[order.id] = el)} closeOnEscape>

@@ -58,7 +58,7 @@ export default function MarketPagePanel() {
             return itemTemplate(follow, index);
         });
 
-        return <div className="grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4">{list}</div>;
+        return <div className="grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">{list}</div>;
     };
 
     return (
