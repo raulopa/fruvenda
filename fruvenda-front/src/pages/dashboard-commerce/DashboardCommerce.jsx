@@ -9,6 +9,7 @@ import { MiniStoreSmile, ClockCircle, User, Pencil, Announcement } from "react-h
 import { Dialog } from "primereact/dialog";
 import { MarketManagementPanel, TimetableManagementPanel, OrderListPanel, MarketProfileEdit, MarketManagementPostPanel, TakeOrderPanel } from "components";
 import { Toast } from "primereact/toast";
+import { SplitButton } from "primereact/splitbutton";
 
 
 
@@ -71,7 +72,7 @@ export default function DashboardCommerce() {
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 600) {
+            if (window.innerWidth < 1023) {
                 setPhone(true)
             } else {
                 setPhone(false)
@@ -102,12 +103,28 @@ export default function DashboardCommerce() {
         setVisibleOrderDialog(false);
     }
 
+    const items = [
+        {
+            label: 'Tomar pedido',
+            icon: 'pi pi-receipt',
+            command: () => {
+                setVisibleOrderDialog(true)
+            }
+        },
+        {
+            label: 'Gestión de pedidos',
+            icon: 'pi pi-sliders-h',
+            command: () => {
+                goToOrderManagement();
+            }
+        }];
+
     return (
         <div className="p-4 h-11/12 flex flex-col">
             <Toast ref={toast} position="bottom-right" />
             <Dialog
                 header={visibleTimetableDialog ? "Administra tus horarios" : visibleOrderDialog ? 'Toma nota de un pedido' : visibleMarketDialog ? "Administra tus mercados" : visiblePostsDialog ? 'Administre sus posts' : "Cambie sus datos"}
-                style={{ width: phone ? '100%' : '50vw', height: phone ? '100%' : '70%' }}
+                style={{ width: phone ? '100%' : '70vw', height: phone ? '100%' : '70%' }}
                 visible={visibleMarketDialog || visibleTimetableDialog || visibleEdit || visiblePostsDialog || visibleOrderDialog}
                 maximizable
                 modal
@@ -188,12 +205,11 @@ export default function DashboardCommerce() {
                     </div>
 
                 </div>
-                <div className="w-full  lg:md:w-4/12 m-1 relative">
-                    <div className="w-full h-96 lg:md:h-full border p-2 border-emerald-500 rounded-lg shadow-lg overflow-hidden">
+                <div className="w-full lg:md:w-4/12 m-1 relative">
+                    <div className="w-full h-96 lg:md:h-div-orders border p-2 border-emerald-500 rounded-lg shadow-lg overflow-hidden">
                         <OrderListPanel externalRefresh={refreshOrders} />
-                        <div className="absolute bottom-2 flex justify-between w-full">
-                            <Button onClick={() => setVisibleOrderDialog(true)} className="flex justify-center bg-gradient-to-r from-emerald-600 to-green-500 py-2 px-2 rounded-lg text-white hover:animate-gradient-x" label="Tomar pedido" />
-                            <Button onClick={goToOrderManagement} className=" mr-4 flex justify-center bg-gradient-to-r from-emerald-600 to-green-500 py-2 px-2 rounded-lg text-white hover:animate-gradient-x" label="Gestión de pedidos" />
+                        <div className="absolute top-2 flex justify-end w-full">
+                            <SplitButton icon="pi pi-refresh" onClick={() => setRefreshOrders(!refreshOrders)} model={items} className="mr-4 py-4 flex justify-centerp-3 rounded-lg text-emerald-500" />
                         </div>
                     </div>
                 </div>

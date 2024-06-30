@@ -65,10 +65,10 @@ module.exports = {
     },
     screens: {
         'smh': {'raw': '(max-height: 639px)'},
-        'mdh': {'raw': '(min-height: 640px) and (max-height: 767px)'},
-        'lgh': {'raw': '(min-height: 768px) and (max-height: 1023px)'},
-        'xlh': {'raw': '(min-height: 1024px) and (max-height: 1279px)'},
-        '2xlh': {'raw': '(min-height: 1280px) and (max-height: 1535px)'},
+        'mdh': {'raw': '(min-height: 640px)'},
+        'lgh': {'raw': '(min-height: 768px)'},
+        'xlh': {'raw': '(min-height: 1024px)'},
+        '2xlh': {'raw': '(min-height: 1280px)'},
         '3xlh': {'raw': '(min-height: 1536px)'}
       }
     },

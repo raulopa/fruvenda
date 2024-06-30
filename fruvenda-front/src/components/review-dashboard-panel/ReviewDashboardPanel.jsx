@@ -34,9 +34,9 @@ export default function ReviewDashboardPanel({toast}){
                         <img className="rounded-full w-12 h-12" src={review.cliente_foto} alt="Foto de perfil de cliente" />
                         <p className="ml-6 w-6/12">{review.cliente_nombre}</p>
                     </div>
-                    <div className="flex justify-around w-full">
+                    <div className="mt-2 flex justify-between w-full">
                         <Rating readOnly value={review.valoracion} cancel={false} />
-                        <Button onClick={()=> handleDelete(review.id)} icon="pi pi-times" className="lg:md:mx-6 lg:md:w-12 w-10 lg:md:h-12 h-10 border-red-500 border rounded-full text-red-500 hover:bg-red-500 hover:text-white" />
+                        <Button onClick={()=> handleDelete(review.id)} icon="pi pi-times" className="lg:md:mx-6 lg:md:w-12 lg:md:h-12 h-8 w-8 border-red-500 border rounded-full text-red-500 hover:bg-red-500 hover:text-white" />
                     </div>
                 </div>
                 <div className=" p-4">

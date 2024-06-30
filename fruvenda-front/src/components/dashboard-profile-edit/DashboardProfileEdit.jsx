@@ -57,8 +57,8 @@ export default function DashboardProfileEdit({ customer, edit, refresh }) {
                     Tus datos
                 </p>
             </div>
-            <div className="flex lg:md:flex-row flex-col justify-center items-center">
-                <div className="h-60 relative w-72 flex justify-center lg:md:block">
+            <div className="flex lg:md:flex-row  flex-col justify-center items-center w-full">
+                <div className="h-60 relative w-72 flex justify-center  lg:md:block">
                     {preview ? (
                         <img src={preview} alt="Customer profile" className="h-full w-60 aspect-square rounded-full" />
                     ) : (
@@ -92,7 +92,7 @@ export default function DashboardProfileEdit({ customer, edit, refresh }) {
                     )}
                 </div>
                 <div className="lg:md:ml-10">
-                    <div className="flex justify-start items-baseline h-16">
+                    <div className="flex justify-start items-baseline h-12">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">
                             Nombre:
                         </p>
@@ -104,7 +104,7 @@ export default function DashboardProfileEdit({ customer, edit, refresh }) {
                             variant="filled"
                         />
                     </div>
-                    <div className="flex justify-start items-baseline h-16">
+                    <div className="flex justify-start items-baseline h-12">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">
                             Apellidos:
                         </p>
@@ -116,7 +116,7 @@ export default function DashboardProfileEdit({ customer, edit, refresh }) {
                             variant="filled"
                         />
                     </div>
-                    <div className="flex justify-start items-baseline h-16">
+                    <div className="flex justify-start items-baseline h-12">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">
                             Telefono:
                         </p>
@@ -128,7 +128,7 @@ export default function DashboardProfileEdit({ customer, edit, refresh }) {
                             variant="filled"
                         />
                     </div>
-                    <div className="flex justify-start items-baseline h-16">
+                    <div className="flex justify-start items-baseline h-12">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">
                             Email:
                         </p>

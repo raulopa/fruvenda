@@ -74,7 +74,7 @@ export default function ReviewsProfilePanel({ readOnly }) {
             <div key={index} className="border border-gray-200 rounded-xl overflow-hidden my-4">
                 <div className="flex justify-between items-center w-full bg-gray-100 p-4 cursor-pointer hover:bg-gray-200">
                     <div onClick={() =>  goToProfile(review.cliente_id)} className="flex justify-start items-center w-6/12 ">
-                        <img className="rounded-full w-12 h-12" src={review.cliente_foto} alt="Foto de perfil de cliente" />
+                        {review.cliente_foto ?  <img className="rounded-full w-12 h-12" src={review.cliente_foto} alt="Foto de perfil de cliente" /> : <div className="rounded-full w-12 h-12 bg-gray-300 animate-pulse"></div> }
                         <p className=" ml-2 lg:md:ml-6 w-6/12">{review.cliente_nombre}</p>
                     </div>
                     <div>

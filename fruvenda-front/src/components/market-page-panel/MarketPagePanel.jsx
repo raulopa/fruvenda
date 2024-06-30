@@ -13,7 +13,7 @@ export default function MarketPagePanel() {
     const [market, setMarket] = useState(null);
     const [commerces, setCommerces] = useState([]);
     const { getMarketBySlug, getCommerceByMarket } = useMarketService();
-    const [rows, setRows] = useState(window.innerWidth < 600 ? 3 : 5);
+    const [rows, setRows] = useState(window.innerWidth < 600 ? 3 : 6);
 
 
     useEffect(() => {
@@ -58,7 +58,9 @@ export default function MarketPagePanel() {
             return itemTemplate(follow, index);
         });
 
-        return <div className="grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">{list}</div>;
+        return <div className="w-full flex justify-center lg:justify-start">
+            <div className="grid place-self-center w-11/12 lg:w-full md:grid-cols-2 grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 xl:gap-16 2xl:gap-2">{list}</div>
+            </div>;
     };
 
     return (

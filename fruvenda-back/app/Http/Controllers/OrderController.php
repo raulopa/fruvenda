@@ -51,7 +51,7 @@ class OrderController extends Controller
                 }
                 $orders = [];
                 foreach ($groupedProducts as $commerceId => $group) {
-                    $order = Order::createOrder($commerceId, $customer->id, $group, $customer->nombre);
+                    $order = Order::createOrder($commerceId, $customer->id, $group, $customer->nombre, $customer->telefono);
                     $orders[] = $order;
 
                     // Restar la cantidad comprada del stock de cada producto usando el DB Builder
@@ -102,7 +102,7 @@ class OrderController extends Controller
         $user = Auth::user();
         $comercio = Commerce::findCommerce($user->email);
         if ($comercio) {
-            $order = Order::createOrder($comercio->id, null, $request->lineas, $request->nombreCliente);
+            $order = Order::createOrder($comercio->id, null, $request->lineas, $request->nombreCliente, $request->telefonoCliente);
 
             foreach ($request->lineas as $item) {
                 Product::subtractStock($item);

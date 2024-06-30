@@ -44,14 +44,15 @@ export default function Wrapper({ page }) {
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth > 600) {
+            if (window.innerWidth <1023) {
+                setOpenSearch(false);
+            }else{
                 setOpenSearch(true);
             }
         };
 
         window.addEventListener('resize', handleResize);
         
-        // Set initial state based on current window size
         handleResize();
 
         return () => {

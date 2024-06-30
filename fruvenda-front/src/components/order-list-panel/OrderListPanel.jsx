@@ -202,7 +202,6 @@ export default function OrderListPanel({ externalRefresh }) {
                 <div className="flex ">
                     <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent">Tus pedidos</p>
                 </div>
-                <Button onClick={() => setRefresh(!refresh)} className="w-10 h-10 bg-gradient-to-r to-green-500 from-emerald-600 text-white hover:animate-gradient-x rounded-full" icon="pi pi-refresh"></Button>
             </div>
 
             <div className="overflow-y-auto overflow-x-hidden h-full">

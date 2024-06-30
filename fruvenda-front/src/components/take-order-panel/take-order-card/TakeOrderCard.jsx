@@ -30,7 +30,7 @@ export default function TakeOrderCard({item, toast, addProduct}){
     }
 
     return(
-        <div className="shadow-lg rounded-lg h-80 overflow-hidden relative">
+        <div className="shadow-lg rounded-lg w-full h-80 overflow-hidden relative">
             
             {item.images != null && item.images.length != 0 ?<img src={item.images[0]} className="h-36 w-full" /> : <div className="h-36 bg-gray-200 animation-pulse" ></div>}
             

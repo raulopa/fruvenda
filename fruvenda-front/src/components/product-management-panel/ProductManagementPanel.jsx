@@ -149,7 +149,7 @@ export default function ProductManagementPanel() {
             <Toast ref={toast} position="bottom-right" />
             <Dialog
                 header=""
-                style={{ width: phone ? '100%' : '50vw', height: phone ? '100%' : '50%' }}
+                style={{ width: phone ? '100%' : '50vw', height: phone ? '100%' : '70%' }}
                 visible={visibleDialog}
                 maximizable
                 modal

@@ -66,9 +66,11 @@ export default function OrderDialogContent({order, toast}){
         <div>
             <div>
                 <p>Id del pedido: {order.id}</p>
+                <p>Nombre: {order.nombre_cliente}</p>
+                <p>Teléfono cliente: {order.telefono_cliente}</p>
                 <p>Fecha: {order.fecha_hora}</p>
                 <p>Estado: <Tag severity={getSeverity(order.estado)} value={order.estado} className="capitalize"></Tag></p>
-                <p>Cliente: {order.id_cliente}</p>
+                
             </div>
             <div>
                 <div className="flex">

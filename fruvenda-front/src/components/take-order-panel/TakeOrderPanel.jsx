@@ -11,6 +11,7 @@ import useOrderService from "services/order-service/useOrderService";
 export default function TakeOrderPanel({ commerce, toast, visible, refresh, setRefresh }) {
 
     const [customer, setCustomer] = useState('');
+    const [customerPhone, setCustomerPhone] = useState('');
     const [products, setProducts] = useState([]);
     const [lineOrder, setLineOrder] = useState([]);
     const [visibleDialog, setVisibleDialog] = useState(false);
@@ -64,7 +65,11 @@ export default function TakeOrderPanel({ commerce, toast, visible, refresh, setR
             toast.current.show({ severity: 'error', summary: 'Requerido', detail: 'El nombre de cliente es requerido' });
         }
 
-        if(lineOrder.length == 0){
+        if (customerPhone == '') {
+            toast.current.show({ severity: 'error', summary: 'Requerido', detail: 'El telefono del cliente es requerido' });
+        }
+
+        if (lineOrder.length == 0) {
             toast.current.show({ severity: 'error', summary: 'Vacío', detail: 'No hay ningun producto apuntado' });
 
         }
@@ -78,7 +83,7 @@ export default function TakeOrderPanel({ commerce, toast, visible, refresh, setR
             toast.current.show({ severity: 'success', summary: 'Realizado', detail: 'El pedido ha sido realizado correctamente' });
             setRefresh(!refresh);
             visible();
-            
+
         }
 
     }
@@ -95,9 +100,14 @@ export default function TakeOrderPanel({ commerce, toast, visible, refresh, setR
                 }}>
                 <CurrentOrderDialog lineOrders={lineOrder} setLineOrders={setLineOrder} />
             </Dialog>
-            <div className="flex justify-between items-center">
-                <InputText placeholder="Nombre del cliente..." className="border border-emerald-500 rounded-md p-2 text-aureus-m w-10/12 lg:md:w-6/12" onChange={(e) => setCustomer(e.target.value)} />
-                <Button onClick={() => setVisibleDialog(true)} icon="pi pi-receipt" className="bg-gradient-to-r from-emerald-500 to-green-500 text-white w-12 h-12 rounded-full"></Button>
+            <div className="flex flex-row justify-between items-center">
+                <div className="w-10/12 flex flex-col lg:md:flex-row justify-between">
+                    <InputText placeholder="Nombre del cliente..." className="border border-emerald-500 rounded-md p-2 text-aureus-m w-11/12 lg:md:w-5/12" onChange={(e) => setCustomer(e.target.value)} />
+                    <InputText placeholder="Telefono del cliente..." className="border border-emerald-500 rounded-md p-2 text-aureus-m w-11/12 lg:md:w-5/12" onChange={(e) => setCustomerPhone(e.target.value)} />
+                </div>
+                <div className="flex justify-center items-center">
+                    <Button onClick={() => setVisibleDialog(true)} icon="pi pi-receipt" className="bg-gradient-to-r from-emerald-500 to-green-500 text-white w-12 h-12 rounded-full"></Button>
+                </div>
             </div>
             <div className="h-5/6 overflow-y-auto overflow-x-hidden mt-2 border border-emerald-500 rounded-lg p-2">
                 <DataView className="h-full" value={products} listTemplate={listTemplate} />

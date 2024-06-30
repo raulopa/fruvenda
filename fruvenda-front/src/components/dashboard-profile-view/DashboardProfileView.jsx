@@ -15,21 +15,21 @@ export default function DashboardProfileView({ customer, edit }) {
                         <div className="h-full w-full bg-gray-200 animate-pulse rounded-full"></div>
                     )}
                 </div>
-                <div className="lg:md:ml-10 -ml-20">
-                    <div className="flex justify-start items-baseline h-16">
+                <div className="lg:md:ml-10 -ml-20 xl:-mt-10">
+                    <div className="flex justify-start items-baseline h-12">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">Nombre: </p>
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m">{customer.nombre}</p>
                     </div>
-                    <div className="flex justify-start items-baseline h-16">
+                    <div className="flex justify-start items-baseline h-12">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">Apellidos: </p>
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m">{customer.apellidos}</p>
                     </div>
 
-                    <div className="flex justify-start items-baseline h-16">
+                    <div className="flex justify-start items-baseline h-12">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">Telefono: </p>
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m">{customer.telefono}</p>
                     </div>
-                    <div className="flex justify-start items-baseline h-16">
+                    <div className="flex justify-start items-baseline h-12">
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">Email: </p>
                         <p className="font-outfit-semibold pl-2 pt-6 pb-6 text-aureus-m lg:text-aureus-m">{customer.email}</p>
                     </div>

@@ -13,14 +13,15 @@ class Order extends Model
     use HasFactory;
 
 
-    public static function createOrder($idComercio, $idCliente, $rows, $nombreCliente)
+    public static function createOrder($idComercio, $idCliente, $rows, $nombreCliente, $telefonoClieeente)
     {
         $pedido = DB::table('pedidos')->insertGetId([
             'fecha_hora' => Carbon::now(),
             'estado' => 'procesado',
             'id_cliente' => $idCliente,
             'id_comercio' => $idComercio,
-            'nombre_cliente' => $nombreCliente
+            'nombre_cliente' => $nombreCliente,
+            'telefono_cliente' => $telefonoCliente
         ]);
         foreach ($rows as $row) {
             $row['id_pedido'] = $pedido;

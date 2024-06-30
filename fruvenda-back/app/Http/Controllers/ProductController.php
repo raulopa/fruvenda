@@ -227,16 +227,23 @@ class ProductController extends Controller
         $commerceDir = public_path("images/commerce/{$commerceId}");
         $productDir = "{$commerceDir}/{$productId}";
 
-        // Crear directorio si no existe
-        if (!File::exists($productDir)) {
-            File::makeDirectory($productDir, 0755, true);
-        }
+        // Verificar si hay imágenes
+        if (!empty($images)) {
+            // Borrar directorio si existe
+            if (File::exists($productDir)) {
+                File::deleteDirectory($productDir);
+            }
 
-        foreach ($images as $index => $image) {
-            $imageName = ($index + 1) . '.' . $image->getClientOriginalExtension();
-            $image->move($productDir, $imageName);
+            // Crear nuevo directorio
+            File::makeDirectory($productDir, 0755, true);
+
+            foreach ($images as $index => $image) {
+                $imageName = ($index + 1) . '.' . $image->getClientOriginalExtension();
+                $image->move($productDir, $imageName);
+            }
         }
     }
+
 
 
 
@@ -327,6 +334,10 @@ class ProductController extends Controller
                 }
                 $infoProducto = $request->except(['id_comercio', 'borrado', 'images']);
                 Product::editProduct($infoProducto);
+                if ($request->hasFile('images')) {
+                    $images = $request->file('images');
+                    $this->handleProductImages($images, $comercio->id, $infoProducto['id']);
+                }
 
                 return response()->json([
                     'status' => true,

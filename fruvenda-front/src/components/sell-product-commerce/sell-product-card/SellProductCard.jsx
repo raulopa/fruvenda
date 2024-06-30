@@ -26,14 +26,14 @@ export default function SellProductCard({ product }) {
     };
 
     const title = (titulo) => (
-        <div className="h-16">
-            <p className="text-aureus-l">{titulo}</p>
+        <div className="h-12 lg:h-16">
+            <p className="text-aureus-m lg:text-aureus-l">{titulo}</p>
         </div>
     );
 
     const subtitle = (subtitulo) => (
-        <div className="h-16">
-            <p>{subtitulo}</p>
+        <div className="h-12 lg:h-16">
+            <p className="text-sm md:text-aureus-m">{subtitulo}</p>
         </div>
     );
 
@@ -54,8 +54,8 @@ export default function SellProductCard({ product }) {
     }
 
     return (
-        <Card header={header} title={title(product.nombre)} subTitle={subtitle(product.descripcion)} className="h-94 w-80 border border-slate-200 rounded-xl p-4 relative">
-            <div className="w-12/12 p-2 flex items-center justify-between absolute left-0 right-0 bottom-0">
+        <Card header={header} title={title(product.nombre)} subTitle={subtitle(product.descripcion)} className="h-94 w-72 md:w-80 border border-slate-200 rounded-xl p-4 relative">
+            <div className="w-full p-2 flex items-center justify-between absolute left-0 right-0 bottom-0">
                 {sessionStorage.getItem('entityType') !== '1' && (
                     <div className="flex w-10/12">
                         <InputNumber 

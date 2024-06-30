@@ -12,7 +12,7 @@ const Header = ({ nombre, foto_perfil, slug}) => {
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 600) {
+            if (window.innerWidth < 1023) {
                setPhone(true)
             } else {
                 setPhone(false)

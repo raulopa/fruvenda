@@ -119,7 +119,10 @@ export default function ProfileCommerce() {
                         <div className="flex">
                             <p className="font-outfit-semibold p-2 text-aureus-l lg:text-aureus-xl bg-gradient-to-r to-green-500 from-emerald-600 bg-clip-text font-bold text-4xl text-transparent capitalize">Productos</p>
                         </div>
-                        <SellProductCommerce products={products} />
+                        <div className="flex justify-center md:justify-start w-100">
+                            <SellProductCommerce  products={products} />
+                        </div>
+                        
                     </div>
                 </TabPanel>
                 <TabPanel headerTemplate={tabHeaderTemplate('pi pi-info-circle', 'Posts')}>

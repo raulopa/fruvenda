@@ -41,7 +41,7 @@ Route::group(['prefix' => 'usuario'], function () {
 Route::group(['prefix' => 'productos', 'middleware' => ['auth:sanctum']], function (){
     Route::get('/', [Controllers\ProductController::class, 'getProductosComercio']);
     Route::post('/add', [Controllers\ProductController::class, 'addProducto']);
-    Route::put('/edit', [Controllers\ProductController::class, 'editProducto']);
+    Route::post('/edit', [Controllers\ProductController::class, 'editProducto']);
     Route::delete('/{id}', [Controllers\ProductController::class, 'deleteProducto']);
     Route::delete('/', [Controllers\ProductController::class, 'deleteProductos']);
 });

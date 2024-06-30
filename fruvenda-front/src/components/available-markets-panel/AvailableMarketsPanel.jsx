@@ -44,14 +44,14 @@ export default function AvailableMarketsPanel() {
         }
 
         return (
-            <div key={market.id} className="h-96 w-80 bg-gradient-to-r from-emerald-500 to-green-400 rounded-lg relative shadow-lg hover:outline hover:outline-2 outline-offset-2 hover:animate-gradient-x hover:outline-green-500">
+            <div key={market.id} className="h-72 lg:h-96 w-64 lg:w-80 bg-gradient-to-r from-emerald-500 to-green-400 rounded-lg relative shadow-lg hover:outline hover:outline-2 outline-offset-2 hover:animate-gradient-x hover:outline-green-500">
                 <div className="flex justify-center">
                     <MiniStoreSmile className="text-white w-36 h-36" />
                 </div>
                 <div>
-                    <p className="text-white font-outfit-bold text-center text-aureus-l mt-2">{market.nombre}</p>
-                    <p className="text-center text-white font-oufit-semibold text-balance w-full mt-2">{market.direccion}</p>
-                    <p className="text-center text-white font-oufit-semibold">{market.codigo_postal}</p>
+                    <p className="text-white text-aureus-m lg:md:text-aureus-l font-outfit-bold text-center text-aureus-l mt-2">{market.nombre}</p>
+                    <p className="text-center text-xs lg:md:text-aureus-m text-white font-oufit-semibold text-balance w-full mt-2">{market.direccion}</p>
+                    <p className="text-center text-xs lg:md:text-aureus-m text-white font-oufit-semibold">{market.codigo_postal}</p>
                 </div>
                 <div className="bottom-0 left-0 right-0 w-full  absolute  px-2 py-2 ">
                     <Button onClick={() => handleNavigation(market.slug)} label="Visitar" className="bg-white w-full text-emerald-500 h-14 hover:bg-gray-50"></Button>
@@ -65,7 +65,7 @@ export default function AvailableMarketsPanel() {
 
         return (
             <div className="flex justify-center">
-                <div className={markets.length < 5 ? 'flex justify-center gap-6' : `grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6`}>
+                <div className={markets.length < 5 ? 'flex justify-center gap-6' : `grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6`}>
                     {markets.map((market, index) => itemTemplate(market, layout, index))}
                 </div>
             </div>

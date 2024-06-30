@@ -98,7 +98,6 @@ export default function useProductService() {
 
         // Añadir imágenes
         images.forEach((image, index) => {
-            console.log(image);
             formData.append('images[]', image);
         });
 
@@ -124,6 +123,7 @@ export default function useProductService() {
         const formData = new FormData();
 
         // Añadir datos del producto
+        formData.append('id', product.id);
         formData.append('nombre', product.nombre);
         formData.append('descripcion', product.descripcion);
         formData.append('precio', product.precio);
@@ -131,10 +131,15 @@ export default function useProductService() {
         formData.append('stock', product.stock);
         formData.append('visible', product.visible ? 1 : 0);
 
+        images.forEach((image, index) => {
+            formData.append('images[]', image);
+        });
+
         try {
-            let response = await axios.put(`${apiUrl}productos/edit`, { ...product }, {
+            let response = await axios.post(`${apiUrl}productos/edit`, formData , {
                 withCredentials: true,
                 headers: {
+                    'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${localStorage.getItem('commerceToken')}`
                 }
             });

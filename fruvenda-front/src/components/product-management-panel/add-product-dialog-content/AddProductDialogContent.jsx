@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { FileUpload } from 'primereact/fileupload';
+import { ToggleButton } from 'primereact/togglebutton';
 
 export default function AddProductDialogContent({ product, restartDialog, setRefresh, toast }) {
     const op = useRef(null);
@@ -18,7 +19,7 @@ export default function AddProductDialogContent({ product, restartDialog, setRef
         precio: { value: "", required: true },
         ud_medida: { value: 'unidades', required: true },
         stock: { value: "", required: true },
-        visible: { value: true, required: false }
+        visible: { value: false, required: false }
     } :{
         nombre: { value: product.nombre, required: true },
         descripcion: { value: product.descripcion, required: true },
@@ -39,6 +40,18 @@ export default function AddProductDialogContent({ product, restartDialog, setRef
 
         if(e.target.name == 'ud_medida'){
             op.current.toggle(e);
+        }
+
+        if(e.target.name == 'visible'){
+            console.log(formValues.visible.value);
+            setFormValues({
+                ...formValues,
+                ['visible']: {
+                    ...formValues['visible'],
+                    value: !formValues.visible.value
+                }
+            });
+            console.log(formValues.visible.value);
         }
     };
 
@@ -64,7 +77,7 @@ export default function AddProductDialogContent({ product, restartDialog, setRef
             }
         }else{
             productData.id = product.id;
-            let edited = await editProduct(productData);
+            let edited = await editProduct(productData, images);
             if (edited.status) {
                 restartDialog();
                 setRefresh(prev => !prev);
@@ -77,10 +90,10 @@ export default function AddProductDialogContent({ product, restartDialog, setRef
 
     const footer = () => (
         <div className="flex items-center justify-evenly">
-            {product == null ?  <Button label="Guardar" aria-label="Guardar Producto" onClick={handleSubmit} className="bg-emerald-500 hover:bg-emerald-600 px-2 h-12 w-full rounded-lg text-white">
+            {product == null ?  <Button label="Guardar" aria-label="Guardar Producto" onClick={handleSubmit} className="bg-emerald-500 max-w-96 hover:bg-emerald-600 px-2 h-12 w-full rounded-lg text-white">
                 <Ripple />
             </Button> : 
-             <Button label="Editar" aria-label="Editar Producto" onClick={handleSubmit} className="bg-amber-500 hover:bg-amber-600 px-2 h-12 w-full rounded-lg text-white">
+             <Button label="Editar" aria-label="Editar Producto" onClick={handleSubmit} className="bg-amber-500 hover:bg-amber-600 px-2 max-w-2xl h-12 w-full rounded-lg text-white">
              <Ripple />
          </Button>
             }
@@ -93,21 +106,28 @@ export default function AddProductDialogContent({ product, restartDialog, setRef
 
     return (
         <Card footer={footer} title={product == null ? 'Añadir producto' : 'Editar producto'} className="h-full w-full border-none shadow-none">
-            <div className='flex flex-col mb-3'>
+            <div className='lg:flex'>
+            <div className='flex flex-col mb-3 xl:w-7/12 w-full mr-10'>
                 <label htmlFor="nombre">Nombre</label>
-                <InputText id="nombre" name='nombre' value={formValues.nombre.value} onChange={handleChange} className='w-8/12 outline outline-1 py-2 outline-green-500 rounded-lg focus:outline-emerald-500 active:outline-emerald-500' />
+                <InputText id="nombre" name='nombre' value={formValues.nombre.value} onChange={handleChange} className='w-full max-w-xl outline outline-1 py-3 outline-green-500 rounded-lg focus:outline-emerald-500 active:outline-emerald-500' />
             </div>
+            <div className='flex flex-col mb-3 w-full xl:w-4/12 '>
+                <label htmlFor="visible">Visibilidad</label>
+                <ToggleButton id="visible" name='visible' value={formValues.visible.value} checked={formValues.visible.value} onChange={handleChange} onLabel='Visible' offLabel='No Visible' onIcon='pi pi-eye' offIcon='pi pi-eye-slash' className='w-full max-w-48 border border-emerald-500 rounded-lg' />
+            </div>
+            </div>
+            
 
             <div className='flex flex-col my-6'>
                 <label htmlFor="descripcion" >Descripción</label>
-                <InputTextarea autoResize id="descripcion" name='descripcion' value={formValues.descripcion.value} onChange={handleChange} className='outline outline-1 py-2 outline-green-500 rounded-lg focus:outline-emerald-500 active:outline-emerald-500 resize-none' />
+                <InputTextarea autoResize id="descripcion" name='descripcion' value={formValues.descripcion.value} onChange={handleChange} className='outline outline-1 max-w-4xl py-2 outline-green-500 rounded-lg focus:outline-emerald-500 active:outline-emerald-500 resize-none' />
             </div>
 
             <div className='flex justify-around my-6'>
                 <div className='flex flex-col w-6/12 lg:w-2/12'>
                     <label htmlFor="precio">Precio</label>
                     <div className='p-inputgroup flex'>
-                        <InputText id="precio" name='precio' keyfilter="num" value={formValues.precio.value} onChange={handleChange} className='w-full border py-2 outline-none border-green-500 focus:outline-emerald-500 active:outline-emerald-500' />
+                        <InputText id="precio" name='precio' keyfilter="num" value={formValues.precio.value} onChange={handleChange} className='w-full border py-2 max-w-40 outline-none border-green-500 focus:outline-emerald-500 active:outline-emerald-500' />
                         <span className="p-inputgroup-addon outline outline-1 py-2 outline-green-500 flex justify-center bg-gradient-to-r from-emerald-600 to-green-500 text-white">
                             <i className="pi pi-euro"></i>
                         </span>
@@ -116,8 +136,8 @@ export default function AddProductDialogContent({ product, restartDialog, setRef
                 <div className='flex flex-col w-6/12 lg:w-2/12'>
                     <label htmlFor="stock">Stock</label>
                     <div className='p-inputgroup flex'>
-                        <InputText id="stock" name='stock' keyfilter="int" value={formValues.stock.value} onChange={handleChange} className='border py-2 outline-none border-green-500 focus:outline-emerald-500 active:outline-emerald-500' />
-                        <Button label={formValues.ud_medida.value == 'precio_kilo' ? 'kgs' : 'uds'} onClick={(e) => op.current.toggle(e)} className='p-inputgroup-addon outline outline-1 py-2 px-1 outline-green-500 flex justify-center bg-gradient-to-r from-emerald-600 to-green-500 text-white' />
+                        <InputText id="stock" name='stock' keyfilter="int" value={formValues.stock.value} onChange={handleChange} className='border outline-none p-2 max-w-40 border-green-500 focus:outline-emerald-500 active:outline-emerald-500' />
+                        <Button label={formValues.ud_medida.value == 'precio_kilo' ? 'kgs' : 'uds'} onClick={(e) => op.current.toggle(e)} className='p-inputgroup-addon outline  outline-1 py-2 px-1 outline-green-500 flex justify-center bg-gradient-to-r from-emerald-600 to-green-500 text-white' />
                         <OverlayPanel ref={op}>
                             <div className='flex flex-col'>
                                 <Button className='pb-2' label='Unidades' name="ud_medida" value={'unidades'} onClick={handleChange}></Button>
